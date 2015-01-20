@@ -1,0 +1,8 @@
+execute:Circle11.cpp Rectangle1.cpp              Vect.cpp
+	g++ -std=c++11 Circle11.cpp Rectangle1.cpp  7_glui1.cpp Vect.cpp -lpthread -lGL -lGLU -lglut -lglui
+
+test: Test.cpp TestRecCir.cpp Circle11.cpp Rectangle1.cpp
+	g++ -std=c++11 Test.cpp TestRecCir.cpp Circle11.cpp Rectangle1.cpp
+
+clear:
+	rm -rf *o execute
