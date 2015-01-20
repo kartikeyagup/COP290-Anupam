@@ -36,9 +36,7 @@ int  Circle::Collision(Message b)
 {
 	cout<<"start in circle"<<endl;
 	Vect* radialdr = (b.position->subVect(position));
-	cout<<"what hap"<<endl;
 	double d = radialdr->magnitude();
-	cout<<"end problem"<<endl;
 	if(d*1.001 <= radius + b.radius){
 	double vrad1im = (speed->dot(radialdr))/(pow(d,2)); 
 	double vrad2im = (b.speed->dot(radialdr))/(pow(d,2));  

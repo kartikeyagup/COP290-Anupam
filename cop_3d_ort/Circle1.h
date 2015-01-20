@@ -1,3 +1,5 @@
+#ifndef CIRCLE_H
+#define CIRCLE_H
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -26,3 +28,4 @@ class Circle
 		void Reflection(Rectangle a);
 		Vect* pointcollision(Message b);
 };
+#endif

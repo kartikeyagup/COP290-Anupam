@@ -1,5 +1,5 @@
 // Aniket add proper random function and collision effect
-
+//Ronak edited
 #ifndef AFA
 #include <GL/freeglut.h>
 #include <GL/glut.h>
@@ -26,7 +26,6 @@ float zoom=1.0;
 vector<Circle*> balls;
 Rectangle* b=new Rectangle();
 double asp,r,g,bl;
-pthread_t* threads;
 pair<double,double>* centre;
 bool* keystates = new bool[256];
 int whatallkeys=0,i;
@@ -37,6 +36,15 @@ GLUI_Rotation *rot;
 GLUI_Panel *panel;
 vector<int> forcolor;
 vector< queue<Message> > database;
+#define pause 500
+#define add   200
+int nabled=0;
+vector<pair<Circle*,bool> > newballs;
+vector<Vect* > forpause;
+vector<pair<pthread_t*,int> > threads;
+
+int last=0; 			// no of balls controlled by the last thread
+int no_perthr;			//no controlled by each thread,but last
 
 
 
@@ -229,6 +237,120 @@ void keyOperations(void){
   }
 
 
+/* TO BE EDITED BY ANIKET
+int addrandom(double radius)
+{	int h=0;
+	double w = glutGet(GLUT_WINDOW_WIDTH);
+	double ht = glutGet(GLUT_WINDOW_HEIGHT);
+	int pixel_l = w, pixel_w = ht;
+	int max=pixel_l*pixel_w;
+	double ortho_x  = 1.0*((w-163)/ht)*2.0;
+	double ortho_y = 1.0*2.0;
+	double len = ortho_x/pixel_l; // along the length
+	double width = ortho_y/pixel_w; // along the width
+	double min1 = min(len,width);
+	raw[balls.size()]=(double)radius/(double)min1;
+	radius= radius/(double)min1;
+	int counti=0;
+	int cre=0;
+while(h==0)
+{	cre = random()%max;
+	double d =1000000000.0;
+	//cout<<cre<<" cre"<<endl;
+	int y_dis2 = cre%pixel_l;
+		if(y_dis2==0) y_dis2 = pixel_l;
+		int x_dis2 = cre/pixel_l + 1;
+		if( x_dis2 >= radius + 1 && x_dis2 + radius <= pixel_w && y_dis2 >= radius + 1 && y_dis2 + radius <= pixel_l )
+		{ for(int i=0;i<balls.size();i++)
+		 {		int x_dis1= int(double (balls[i]->xcord+((w-163)/ht)) /double (min1) + 1) ;
+				int y_dis1 = int( (double)(balls[i]->ycord+1.0) / double(width) + 1);
+				d = min(d,sqrt((x_dis1-y_dis2)*(x_dis1-y_dis2)+(y_dis1-x_dis2)*(y_dis1-x_dis2))-raw[i]);
+			
+			
+	    	}
+		 if(d>=radius)
+				{	pos_cl.push_back(cre);h++;}
+		}
+		cout<<"chotu"<<endl;
+		counti++;
+		if(counti>10000)
+			{	break;}
+	}
+	if(h==1)
+	{	int y3 = cre%pixel_l;
+		if(y3==0)y3 = pixel_l;
+		int x3 = cre/pixel_l + 1;
+		loc.push_back((make_pair(double(y3-1)*len,double(x3-1)*width)));
+		}
+		return h;
+	}
+
+
+
+
+void badd(void){
+	double w = glutGet(GLUT_WINDOW_WIDTH);
+	double h = glutGet(GLUT_WINDOW_HEIGHT);
+	int i=balls.size();
+	
+	double rad = 0.05,xs=0,ys=0,x=0,y=0;
+	int chi= addrandom(rad);
+	act[i]=rad;	
+	if(chi==1)
+	{	 x=loc[i].first-((w-163)/h); y=loc[i].second-1.0;
+	}
+	Circle* newball = new Circle(rad,xs,ys,x,y);
+	balls.push_back(newball);
+	int a=random()%(colvector.size());
+	forcolor.push_back(a);
+	reflect.push_back(0);
+	if (threads[threads.size()-1].second < no_perthr){
+		threads[threads.size()-1].second +=1;
+	}
+	else{
+		pthread_t* thr = new pthread_t;
+		pair<pthread_t*,int> a = make_pair(thr,1);
+		threads.push_back(a);		
+	}
+	
+}*/
+
+void control1_cb(int control){
+   // if (nabled==1){
+    //		forpause.resize(0);
+//    		if(ch==0){
+// 	   		for(int i=0;i<balls.size();i++){
+// 	   				Vect *a = new Vect(balls[i]->speed->x,balls[i]->speed->y,balls[i]->speed->z);
+// 					forpause.push_back(a);
+// 	   				balls[i]->speed->x=0;
+// 	   				balls[i]->speed->y=0; 
+// 	   				balls[i]->speed->z=0;
+// 	   		}
+// 	   		ch ++;
+// 	   	}
+
+//    		if (control==add){
+//    			badd();
+//    			control=0;
+//    		}
+// 	}
+
+// 	else{ 		
+//    		if( control!= add){
+//    		for(int i=0;i<balls.size();i++){
+//    				balls[i]->speed->x=forpause[i]->x;
+//    				balls[i]->speed->y=forpause[i]->y;
+//    				balls[i]->speed->z=forpause[i]->z;
+//    			}
+//    			ch = 0;	
+//    			cou=0;
+//    		}
+
+
+// 	}
+ }
+
+
 double min(double a , double b)
 {	return a>b ? a:b;}
 
@@ -306,51 +428,81 @@ static void resize(int width, int height)
     glLoadIdentity();
     int w = glutGet( GLUT_WINDOW_WIDTH );
     int h = glutGet( GLUT_WINDOW_HEIGHT );
-    //glViewport(0,0,w,h);
-    //gluPerspective( 5.0f, w / h, -1000.0f, 1.0f );
 	glOrtho(-w,w,-h,h,-10000,10000);     
-	/*gluLookAt
-        ( 
-        -700,0,-700, 
-        0,0,0,
-        0, 0,1 
-        );
-*/
-   //glFrustum(-w,w,-h,h,-4000,4000);
-    glMatrixMode( GL_MODELVIEW );
+	glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
-    //glLoadIdentity();
-     glutSwapBuffers();
+    glutSwapBuffers();
 } 
  
  
 vector<Vect*> diffpoint;
 vector<Vect*> actual;
 void* update(void* arg)
-{	long counter;
-	counter = (long)arg;
-	Message mes1;
-	mes1.position = balls[counter]->position ; mes1.speed = balls[counter]->speed; mes1.radius = balls[counter]->radius;
+{	
+	long counter;
 	pthread_mutex_lock(&imutex);
-	//cout<<database.size()<<endl;
-	while(database[counter].empty()== false)
-	{
-			
-			Message m = database[counter].front();
-			
-			database[counter].pop();
-			if(balls[counter]->Collision(m)==1)
-			{	Vect* pointofcollision = balls[counter]->pointcollision(m);	
-				diffpoint.push_back(pointofcollision);			
+	counter = (long)arg;
+	cout<<"pooooo"<<endl;
+	if( counter < threads.size()-1){
+		for(int i=counter*no_perthr;i < counter*no_perthr + no_perthr;i++){
+			Message mes1;
+			mes1.position = balls[i]->position ; mes1.speed = balls[i]->speed; mes1.radius = balls[i]->radius;
+			cout<<"weeee"<<endl;
+			while(database[i].empty()== false)
+			{
+					
+					Message m = database[i].front();
+					
+					database[i].pop();
+					if(balls[i]->Collision(m)==1)
+					{	Vect* pointofcollision = balls[i]->pointcollision(m);	
+						diffpoint.push_back(pointofcollision);			
+					}
 			}
+			for(int j=0;j<database.size();j++)
+			{
+				if(j!=i) database[j].push(mes1);
+				//cout<<"here hello  "<<
+			}
+		}
+
+		for(int i=counter*no_perthr;i<counter*no_perthr + no_perthr;i++){
+			balls[i]->Reflection(*b);	
+		}
+		for(int i=counter*no_perthr;i<counter*no_perthr + no_perthr;i++){
+			balls[i]->Move();
+		}
+
 	}
-	for(int i=0;i<database.size();i++)
-	{
-		if(i!=counter) database[i].push(mes1);
-		//cout<<"here hello  "<<
+	else{
+		cout<<"reeeee"<<endl;
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			Message mes1;
+			mes1.position = balls[i]->position ; mes1.speed = balls[i]->speed; mes1.radius = balls[i]->radius;
+
+			while(database[i].empty()== false)
+			{
+					
+					Message m = database[i].front();
+					
+					database[i].pop();
+					if(balls[i]->Collision(m)==1)
+					{	Vect* pointofcollision = balls[i]->pointcollision(m);	
+						diffpoint.push_back(pointofcollision);			
+					}
+			}
+			for(int j=0;j<database.size();j++)
+			{
+				if(j!=i) database[j].push(mes1);
+			}
+		}
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			balls[i]->Reflection(*b);
+		}
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			balls[i]->Move();
+		}
 	}
-	balls[counter]->Reflection(*b);
-	balls[counter]->Move(/*sqrt(pow(balls[counter]->xspeed,2)+pow(balls[counter]->yspeed,2))*/);
 	pthread_mutex_unlock(&imutex);
 }
 
@@ -396,24 +548,17 @@ void display(void)
 
 
 
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
-	 	// glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-	  //   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-	  //   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	  //   glLightfv(GL_LIGHT0, GL_POSITION, light_position); 
+    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
 
-
-	    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-	    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-	    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-	    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
-	    glEnable(GL_LIGHT0);
-	    glEnable(GL_LIGHT1);
-
-	    //glEnable(GL_NORMALIZE);
-	    glEnable(GL_COLOR_MATERIAL);
-	    glEnable(GL_LIGHTING); 
+    //glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); 
 
 	glMultMatrixf( Cube_rotate );
 	keyOperations();
@@ -428,7 +573,7 @@ void display(void)
 	// {
 	// 	cout<<balls[i]->position->x <<" x" <<balls[i]->position->y <<" y"<<balls[i]->position->z <<" z"<<endl;  
 	// }
- 	pthread_t threads[balls.size()];
+ 	
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for(int i=0;i<balls.size();i++)
 	{	/*if (check<balls.size());
@@ -447,20 +592,36 @@ void display(void)
 		glutSolidSphere(balls[i]->radius,50,50);
 		glPopMatrix();
 	}	
-	pthread_mutex_init(&imutex,NULL);
-	//cout<<"start"<<endl;
-	int rc;		
-	for(int i=0;i<balls.size();i++)
+	
+	int rc;	
+	for(int i=0;i<threads.size();i++)
 	{
-		
-		rc = pthread_create(&threads[i],NULL,update,(void*)i);
+		rc = pthread_create((threads.at(i)).first,NULL,update,(void*)i);
 		if(rc)
 		{
 			cout<<"Unable to create thread"<<endl;
 			exit(1);
 		}
 	}
-	for(int i=0;i<balls.size();i++) pthread_join(threads[i],NULL);
+	for(int i=0;i<threads.size();i++){
+		cout<<i<<"joining threads"<<endl;
+		 pthread_join(*(threads.at(i)).first,NULL);
+	}
+	// pthread_t threads[balls.size()];
+	// pthread_mutex_init(&imutex,NULL);
+	// int rc;		
+	// for(int i=0;i<balls.size();i++)
+	// {
+		
+	// 	rc = pthread_create(&threads[i],NULL,update,(void*)i);
+	// 	if(rc)
+	// 	{
+	// 		cout<<"Unable to create thread"<<endl;
+	// 		exit(1);
+	// 	}
+	// }
+	// for(int i=0;i<balls.size();i++) pthread_join(threads[i],NULL);
+
 	//cout<<"end"<<endl;
 	int cat=0;
 while(cat<=12)
@@ -489,77 +650,6 @@ while(cat<=12)
     glutPostRedisplay();
 } 
 
- 
-// const GLfloat light_ambient[]  = { 10.0f, 10.0f, 10.0f, 1.0f };
-// const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position[] = { 700.0f, 700.0f, 700.0f, 0.0f }; 
- 
-
-// const GLfloat light_ambient1[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse1[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position1[] = { -700.0f, -700.0f, -700.0f, 0.0f }; 
-
-
-// const GLfloat light_ambient2[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse2[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position2[] = { 700.0f, 700.0f, -700.0f, 0.0f }; 
-
-// const GLfloat light_ambient3[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse3[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position3[] = { 700.0f, -700.0f, -700.0f, 0.0f }; 
-
-// const GLfloat light_ambient4[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse4[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular4[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position4[] = { 700.0f, -700.0f, 700.0f, 0.0f }; 
-
-// const GLfloat light_ambient5[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse5[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular5[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position5[] = { -700.0f, 700.0f, 700.0f, 0.0f }; 
-
-// const GLfloat light_ambient6[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse6[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular6[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position6[] = { 700.0f, 700.0f, 700.0f, 0.0f }; 
- 
-
-// const GLfloat light_ambient7[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse7[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular7[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position7[] = { -700.0f, -700.0f, -700.0f, 0.0f }; 
-
-
-// const GLfloat light_ambient2[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse2[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position2[] = { 700.0f, 700.0f, -700.0f, 0.0f }; 
-
-// const GLfloat light_ambient3[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse3[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular3[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position3[] = { 700.0f, -700.0f, -700.0f, 0.0f }; 
-
-// const GLfloat light_ambient4[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse4[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular4[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position4[] = { 700.0f, -700.0f, 700.0f, 0.0f }; 
-
-// const GLfloat light_ambient5[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-// const GLfloat light_diffuse5[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_specular5[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat light_position5[] = { -700.0f, 700.0f, 700.0f, 0.0f }; 
-
-
-// const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-// const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-// const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-// const GLfloat high_shininess[] = { 100.0f }; 
- 
 /* Program entry point */
  
 int main(int argc, char *argv[])
@@ -567,12 +657,14 @@ int main(int argc, char *argv[])
     if(argc == 2)
     {
 	    int n;
+	    
 	    n= atoi(argv[1]);
+	    int m=n;
+		no_perthr=n/m;					
+		last=m % n;
 	    cout<<"Enter no of balls"<<endl;
-	    threads = new pthread_t[n];
+	    //threads = new pthread_t[n];
 	    glutInit(&argc, argv);
-	    //double l=1853,w=1027,x=0,y=0,rcolour=1,gcolor=0,bcolor=0;
-	    cout<<"Enter rectangle parameters"<<endl;
 	    glutInitWindowSize(1853,1027);
 	    main_window=glutCreateWindow("Yo Team Creation");
 	    double width = glutGet(GLUT_WINDOW_WIDTH); //Width in pixels of the current window.
@@ -582,7 +674,7 @@ int main(int argc, char *argv[])
 	    Vect* col = new Vect(1,1,1);
 	    Vect* dim = new Vect(1400,1400,1400);
 	    b->Rectang(dim,col,w);
-	    //glutInitWindowPosition(b->position->x,b->position->y);
+	    
 	    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); 
 	    
 	     for(int i=0;i<n;i++)
@@ -590,19 +682,15 @@ int main(int argc, char *argv[])
 	 
 	
 	    centre= new pair<double,double>[n];
-		cout<<"1"<<endl;
-	   random(n);
-	    cout<<"a"<<endl;
+	  	random(n);
 	    for(int i=0;i<n;i++)
 	    {
-		//srand(100);
 		
-		cout<<r<<" r "<<g<<" g "<<bl<<" bl "<<endl;
+		
 		double x=p[i].x/*-5+2*i*/,y=p[i].y/*-5+2*i*/,z=p[i].z,rad=100/*random()%2/10.0+0.1*/,xs=/*-30*//*rand()%30 - 28*/6000.0,ys=/*-30*//*rand()%30 - 28*/6000.0,zs =0;;
 		Vect* a1= new Vect(x,y,z);
 		Vect* b1= new Vect(xs,ys,zs);
-		cout<<"Enter circle parameters"<<endl;
-		//cin>>rad>>xs>>ys>>x>>y;;
+
 		Circle* a=new Circle(rad,a1,b1);
 		cout<<x<<" "<<y<<endl;
 		balls.push_back(a);
@@ -616,15 +704,28 @@ int main(int argc, char *argv[])
 			cout<<a<<endl;
 			forcolor.push_back(a);
 		}
-		//exit(0);
 
-	   // r= rand()%100/100.0; g = rand()%100/100.0; bl= rand()%100/100.0;
+	    for(int i=0;i<m;i++) 
+	    {
+	    	if(i<m-1){
+	    		pthread_t* thr = new pthread_t;
+	    		pair<pthread_t*,int> a = make_pair(thr,no_perthr);
+	    		threads.push_back(a);
+	    	}
+	    	else{
+	    		pthread_t* thr=new pthread_t;
+	    		pair<pthread_t*,int> a = make_pair(thr,last);
+	    		threads.push_back(a);
+	    	}
+	    
+	    }
+
+	   
 	    GLUI_Master.set_glutReshapeFunc(resize);
 	    glutKeyboardFunc(keyPressed);
 	    glutSpecialFunc(specialKeys);
 	    glutKeyboardUpFunc(keyup);
-	    
-	    //cout<<"abcd"<<endl;
+
 	    glutDisplayFunc(display);
 	    GLUI *glui = GLUI_Master.create_glui_subwindow( main_window, 
               GLUI_SUBWINDOW_RIGHT );
@@ -636,97 +737,114 @@ int main(int argc, char *argv[])
   		sb = new GLUI_Scrollbar( glui, "zoom",GLUI_SCROLL_VERTICAL,
                            &zoom,zoom_ID,control_cb);
   		sb->set_float_limits( 1.0, 3.0 );
-
-		// allow the object to be spun via the glui rotation widget:
+		new GLUI_Checkbox( glui, "Pause", &nabled,2,control1_cb);
+  		new GLUI_Button( glui, "add ball", add, control1_cb );
 
 		glui->sync_live();
-		GLUI_Master.sync_live_all();
-
-	   // glutIdleFunc(display);	
+		GLUI_Master.sync_live_all();	
 	    glEnable(GL_DEPTH_TEST);
 	    glClearColor(b->colour->x,b->colour->y,b->colour->z,1);
 	    //3D effects start here
 	    glEnable(GL_BLEND);
 	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	    //glEnable(GL_CULL_FACE);
-	    //glCullFace(GL_BACK);
-	 
-	    
-	    //glDepthFunc(GL_LESS); 
-	 	//glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-	    // glEnable(GL_LIGHT0);
-	    // //glEnable(GL_NORMALIZE);
-	    // glEnable(GL_COLOR_MATERIAL);
-	    // glEnable(GL_LIGHTING); 
-	 	
-	    // glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-	    // glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-	    // glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	    // glLightfv(GL_LIGHT0, GL_POSITION, light_position); 
-
-	    // glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient1);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse1);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular1);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position1); 
-
-	    //  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient2);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse2);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular2);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position2); 
-
-	    //  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient3);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse3);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular3);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position3); 
-
-	    //  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient4);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse4);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular4);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position4); 
-
-	    //  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient5);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse5);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular5);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position5); 
-	 
-
-	 	// glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-	  //   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-	  //   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	  //   glLightfv(GL_LIGHT0, GL_POSITION, light_position); 
-
-	  //   glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient1);
-	  //   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse1);
-	  //   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular1);
-	  //   glLightfv(GL_LIGHT1, GL_POSITION, light_position1); 
-
-	  //    glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient2);
-	  //   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse2);
-	  //   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular2);
-	  //   glLightfv(GL_LIGHT1, GL_POSITION, light_position2); 
-
-	  //    glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient3);
-	  //   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse3);
-	  //   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular3);
-	  //   glLightfv(GL_LIGHT1, GL_POSITION, light_position3); 
-
-	  //    glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient4);
-	  //   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse4);
-	  //   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular4);
-	  //   glLightfv(GL_LIGHT1, GL_POSITION, light_position4); 
-
-	    //  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient5);
-	    // glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse5);
-	    // glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular5);
-	    // glLightfv(GL_LIGHT1, GL_POSITION, light_position5); 
-	    // glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-	    // glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-	    // glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-	    // glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
 	    glutMainLoop(); 
 	 
 	    return EXIT_SUCCESS;
+	}
+	else if(argc==3){
+		int m;
+		m=atoi(argv[2]);
+		int n = atoi(argv[1]);
+		no_perthr=n/m;					
+		last=m % n;
+	    //threads = new pthread_t[n];
+	    glutInit(&argc, argv);
+	    glutInitWindowSize(1853,1027);
+	    main_window=glutCreateWindow("Yo Team Creation");
+	    double width = glutGet(GLUT_WINDOW_WIDTH); //Width in pixels of the current window.
+	    double height = glutGet(GLUT_WINDOW_HEIGHT);
+	    asp = width/height;
+	    Vect* w= new Vect(0,0,0);
+	    Vect* col = new Vect(1,1,1);
+	    Vect* dim = new Vect(1400,1400,1400);
+	    b->Rectang(dim,col,w);
+	    
+	    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); 
+	    
+	     for(int i=0;i<n;i++)
+			{	reali.push_back(100);}
+	 
+	
+	    centre= new pair<double,double>[n];
+	  	random(n);
+	    for(int i=0;i<n;i++)
+	    {
+		
+		
+		double x=p[i].x/*-5+2*i*/,y=p[i].y/*-5+2*i*/,z=p[i].z,rad=100/*random()%2/10.0+0.1*/,xs=/*-30*//*rand()%30 - 28*/6000.0,ys=/*-30*//*rand()%30 - 28*/6000.0,zs =0;;
+		Vect* a1= new Vect(x,y,z);
+		Vect* b1= new Vect(xs,ys,zs);
+
+		Circle* a=new Circle(rad,a1,b1);
+		cout<<x<<" "<<y<<endl;
+		balls.push_back(a);
+		queue<Message> q;
+		database.push_back(q);
+
+	    }
+	    addcolors();
+	    for(int i=0;i<balls.size();i++){
+			int a=random()%(colvector.size());
+			cout<<a<<endl;
+			forcolor.push_back(a);
+		}
+
+	    for(int i=0;i<m;i++) 
+	    {
+	    	if(i<m-1){
+	    		pthread_t* thr = new pthread_t;
+	    		pair<pthread_t*,int> a = make_pair(thr,no_perthr);
+	    		threads.push_back(a);
+	    	}
+	    	else{
+	    		pthread_t* thr=new pthread_t;
+	    		pair<pthread_t*,int> a = make_pair(thr,last);
+	    		threads.push_back(a);
+	    	}
+	    
+	    }
+
+	   
+	    GLUI_Master.set_glutReshapeFunc(resize);
+	    glutKeyboardFunc(keyPressed);
+	    glutSpecialFunc(specialKeys);
+	    glutKeyboardUpFunc(keyup);
+
+	    glutDisplayFunc(display);
+	    GLUI *glui = GLUI_Master.create_glui_subwindow( main_window, 
+              GLUI_SUBWINDOW_RIGHT );
+  		 glui->set_main_gfx_window( main_window );
+  	 	GLUI_Rotation *rot= new GLUI_Rotation(glui, "Objects", Cube_rotate );
+  		rot->set_spin( 1.0 );
+
+  		GLUI_Scrollbar *sb;
+  		sb = new GLUI_Scrollbar( glui, "zoom",GLUI_SCROLL_VERTICAL,
+                           &zoom,zoom_ID,control_cb);
+  		sb->set_float_limits( 1.0, 3.0 );
+		new GLUI_Checkbox( glui, "Pause", &nabled,2,control1_cb);
+  		new GLUI_Button( glui, "add ball", add, control1_cb );
+
+		glui->sync_live();
+		GLUI_Master.sync_live_all();	
+	    glEnable(GL_DEPTH_TEST);
+	    glClearColor(b->colour->x,b->colour->y,b->colour->z,1);
+	    //3D effects start here
+	    glEnable(GL_BLEND);
+	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	    glutMainLoop(); 
+	 
+	    return EXIT_SUCCESS;
+
 	}
 }
 #endif

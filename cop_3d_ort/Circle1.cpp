@@ -1,4 +1,4 @@
-#ifndef CIRCLE.CPP
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -93,4 +93,3 @@ void Circle::Reflection(Rectangle a)
 		else if(f) speed->z = -abs(speed->z);
 	
 }
-#endif

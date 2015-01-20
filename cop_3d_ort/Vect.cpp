@@ -1,4 +1,4 @@
-#ifndef Vect.cpp
+
 #include <bits/stdc++.h>
 #include "Vect.h"
 using namespace std;
@@ -48,4 +48,3 @@ Vect* Vect::multVect(double a)
 	b->z = a*z;
 	return b;
 }
-#endif

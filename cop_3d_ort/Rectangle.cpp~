@@ -1,4 +1,5 @@
-
+#ifndef RECTANGLE
+#define RECTANGLE
 #include <bits/stdc++.h>
 #include "Rectangle.h"
 using namespace std;
@@ -18,3 +19,4 @@ void Rectangle::Rectang(Vect* dim,Vect* col,Vect* pos_r)
 	colour =col;
 }
 
+#endif
