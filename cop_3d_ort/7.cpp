@@ -26,6 +26,7 @@ float zoom=1.0;
 vector<Circle*> balls;
 Rectangle* b=new Rectangle();
 double asp,r,g,bl;
+pthread_t* threads;
 pair<double,double>* centre;
 bool* keystates = new bool[256];
 int whatallkeys=0,i;
@@ -315,9 +316,9 @@ void badd(void){
 	
 }*/
 
-void control1_cb(int control){
-   // if (nabled==1){
-    //		forpause.resize(0);
+// void control1_cb(int control){
+//    if (nabled==1){
+//    		forpause.resize(0);
 //    		if(ch==0){
 // 	   		for(int i=0;i<balls.size();i++){
 // 	   				Vect *a = new Vect(balls[i]->speed->x,balls[i]->speed->y,balls[i]->speed->z);
@@ -348,7 +349,7 @@ void control1_cb(int control){
 
 
 // 	}
- }
+// }
 
 
 double min(double a , double b)
@@ -442,12 +443,11 @@ void* update(void* arg)
 	long counter;
 	pthread_mutex_lock(&imutex);
 	counter = (long)arg;
-	cout<<"pooooo"<<endl;
 	if( counter < threads.size()-1){
 		for(int i=counter*no_perthr;i < counter*no_perthr + no_perthr;i++){
 			Message mes1;
 			mes1.position = balls[i]->position ; mes1.speed = balls[i]->speed; mes1.radius = balls[i]->radius;
-			cout<<"weeee"<<endl;
+
 			while(database[i].empty()== false)
 			{
 					
@@ -475,7 +475,6 @@ void* update(void* arg)
 
 	}
 	else{
-		cout<<"reeeee"<<endl;
 		for(int i=counter*no_perthr;i<balls.size();i++){
 			Message mes1;
 			mes1.position = balls[i]->position ; mes1.speed = balls[i]->speed; mes1.radius = balls[i]->radius;
@@ -497,7 +496,7 @@ void* update(void* arg)
 			}
 		}
 		for(int i=counter*no_perthr;i<balls.size();i++){
-			balls[i]->Reflection(*b);
+			balls[i]->Reflection(*b,reflect.at(counter));
 		}
 		for(int i=counter*no_perthr;i<balls.size();i++){
 			balls[i]->Move();
