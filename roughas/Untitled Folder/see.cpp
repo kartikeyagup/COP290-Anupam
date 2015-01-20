@@ -27,6 +27,9 @@ using namespace std;
 #define idy 302
 #define show 100
 #define box1 101
+
+
+
 int nabled=0;
 float xspee=0;
 float yspee=0;
@@ -45,14 +48,18 @@ pair<double,double>* centre;
 double r;
 double g;
 double bl;
-//keys k(balls);
+			//	characters ascii code //  
 bool* keystates = new bool[256];
 int whatallkeys=0;
 int i;
 int xwindow, ywindow, wid, heig ;
 GLUI_EditText *xyz;
 GLUI_EditText *ysp;
+int last=0;					// no of the balls controlled by the threads	//
+int num_perthr;				// no controlled by each thread	//
+
 int watercontrol=1000;
+			// database //
 vector< queue<Message> > database;
 
 
@@ -62,6 +69,8 @@ vector<Vect*> colvector;
 vector<Vect*> finalvector;
 Vect* color;
 
+			//	providing the color ratio of rgv	//
+
 void changetoratio(){
 	for(int i=0;i<colvector.size();i++){
 		double sum=colvector[i]->x+colvector[i]->y+colvector[i]->z;
@@ -70,7 +79,7 @@ void changetoratio(){
 	}
 
 }
-
+//  color combination	//
 
 void addcolors(){
 	
@@ -114,7 +123,7 @@ void addcolors(){
 	changetoratio();
 }
 
-
+//  creating the quadrilateral demarcating the water surface	//
 
 float ver[8][3] = 
 {
@@ -130,26 +139,26 @@ float ver[8][3] =
 
 
 
-double transp=0.5;
+double transp=0.5;   // the degree of transparency of  the surface	//
+
+// creating the quadrilateral	//
+
 void quad(int a,int b,int c,int d,double r,double g,double bl,double transp)
 {
     glBegin(GL_QUADS);
     glColor4f(r,g,bl,transp);    
-	//glColor3fv(color[a]);
+    
     glVertex3fv(ver[a]);
 
-    //glColor3fv(color[b]);
     glVertex3fv(ver[b]);
 
-    //glColor3fv(color[c]);
     glVertex3fv(ver[c]);
 
-    //glColor3fv(color[d]);
     glVertex3fv(ver[d]);
     glEnd();
 }
 
-
+// coloring the cube //
 
 void colorcube()
 {
@@ -160,46 +169,6 @@ void colorcube()
     //quad(4,5,6,7,0,0,1,0.5);
     //quad(0,1,5,4,0,1,0,0.5);
 }
-
-
-
-
-
-
-
-
-
-
-void randm(int n,double r, double len, double weight)
-{		
-	int k1= int((len/(r*3)));
-	int k2 = int(((weight)/(r*3)));		
-	int max_range=k1*k2;
-	vector<int> pos;
-	int ch=0;
-	int num=0;
-	int j=0;
-	
-	for(int i=0;i<max_range&&j<n;i++)
-	{	int rn = max_range-i;
-		int rm = n- j ;
-		if(rand()%rn<rm)
-		{	pos.push_back(i+1);
-		}
-	}
-	
-	centre = new pair<double,double>[n];
-	for(int i=0;i<n;i++)
-	{	int nu=pos[i];
-		int ylane= nu%k2;
-		if(ylane==0)ylane=k2; // along the length side 
-		int xlane = nu/k2;
-		double xcen =  xlane*3*r + 1.5*double(r);
-		double ycen = (ylane-1)*3*r+ 1.5*r;
-		centre[i]=make_pair(xcen,ycen);
-	}
-}
-
 
 
 static void resize(int width, int height)
@@ -221,7 +190,7 @@ static void resize(int width, int height)
     glutPostRedisplay();
 
 } 
- 
+  			//  creating the random function //
 double raw[1000];
 double act[1000];
 
@@ -236,7 +205,7 @@ vector<int> pos_cl;
 int random(int n)
 {	double w = glutGet(GLUT_WINDOW_WIDTH);
 	double ht = glutGet(GLUT_WINDOW_HEIGHT);
-	int pixel_l = w, pixel_w = ht;
+	int pixel_l = w,int  pixel_w = ht;				// defining the pixels
 	int  max= pixel_l*pixel_w;
 	double ortho_x  = 1.0*((w-163)/ht)*2.0;
 	double ortho_y = 1.0*2.0;
@@ -256,32 +225,30 @@ int random(int n)
 	{	double d;
 	
 		cre=(rand()*rand())%max;
-		;
 		d=100000000.0;     // int max rough value
 		
 		int y_dis2 = cre%pixel_l;
 		if(y_dis2==0)y_dis2 = pixel_l;
 		
 		int x_dis2 = cre/pixel_l + 1;
+		if(cre%pixel_l==0)x_dis2 = cre/pixel_l;
+		
 		if( x_dis2 >= raw[chi-1] + 1 && x_dis2 + raw[chi-1] <= pixel_w && y_dis2 >= raw[chi-1] + 1 && y_dis2 + raw[chi-1] <= pixel_l ) /// doesnot exceed the boundary condition
 		{	
-			cout<<pos_cl.size()<<endl;
 			for(int i=0;i<pos_cl.size();i++)
 			{	int x_dis1= pos_cl[i]/pixel_l+1;
 				int y_dis1 = pos_cl[i]%pixel_l;	
 				if(y_dis1==0)y_dis1=pixel_l;
 				d = min(d,sqrt((x_dis1-x_dis2)*(x_dis1-x_dis2)+(y_dis1-y_dis2)*(y_dis1-y_dis2))-raw[i]);	//minimum distance 
 			}
-			
-		
 			if(d>=raw[chi-1])
-			{	cout<<counter<<endl;counter=0;cout<<chi<<" "<<endl;pos_cl.push_back(cre);chi++;
+			{	counter=0;pos_cl.push_back(cre);chi++;
 			}
 		
 	
 		}
-				counter++;
-			if(counter>1000)
+			counter++;
+			if(counter>10000)
 			{break;	}
 	}
 	for(int i=0;i<pos_cl.size();i++)
@@ -289,11 +256,12 @@ int random(int n)
 		int y1 = pos_cl[i]%pixel_l;
 		if(y1==0)y1=pixel_l;
 		int x1 = pos_cl[i]/pixel_l + 1;
+		if(pos_cl[i]%pixel_l==0)x1 = pos_cl[i]/pixel_l;
 		loc.push_back(make_pair(double(y1-1)*len,double(x1-1)*width));
 	}
 	return chi;
 }
-
+				// add random	//
 
 int addrandom(double radius)
 {	int h=0;
@@ -313,18 +281,16 @@ int addrandom(double radius)
 while(h==0)
 {	cre = random()%max;
 	double d =1000000000.0;
-	//cout<<cre<<" cre"<<endl;
 	int y_dis2 = cre%pixel_l;
 		if(y_dis2==0) y_dis2 = pixel_l;
 		int x_dis2 = cre/pixel_l + 1;
+		if(cre%pixel_l==0)x_dis2=cre/pixel_l;
 		if( x_dis2 >= radius + 1 && x_dis2 + radius <= pixel_w && y_dis2 >= radius + 1 && y_dis2 + radius <= pixel_l )
-		{ for(int i=0;i<balls.size();i++)
-		 {		int x_dis1= int(double (balls[i]->xcord+((w-163)/ht)) /double (min1) + 1) ;
+		{ for(int i=0;i<balls.size();i++)													// checking the point is eligible or not	//
+		 {		int x_dis1= int(double (balls[i]->xcord+((w-163)/ht)) /double (len) + 1) ;
 				int y_dis1 = int( (double)(balls[i]->ycord+1.0) / double(width) + 1);
 				d = min(d,sqrt((x_dis1-y_dis2)*(x_dis1-y_dis2)+(y_dis1-x_dis2)*(y_dis1-x_dis2))-raw[i]);
-			
-			
-	    	}
+		 }
 		 if(d>=radius)
 				{	pos_cl.push_back(cre);h++;}
 		}
@@ -333,15 +299,18 @@ while(h==0)
 		if(counti>100000)
 			{	break;}
 	}
-	cout<<"h"<<h<<endl;
 	if(h==1)
 	{	int y3 = cre%pixel_l;
 		if(y3==0)y3 = pixel_l;
 		int x3 = cre/pixel_l + 1;
+		if(cre%pixel_l==0)x3=cre/pixel_l;
 		loc.push_back((make_pair(double(y3-1)*len,double(x3-1)*width)));
 		}
+	
 		return h;
-	}
+}
+		// checking which ball the click is on	//
+
 pair<int,int> a;
 int deleteball(int x , int y)
 {
@@ -354,23 +323,31 @@ int deleteball(int x , int y)
 	double y1 = (2.0* (double)y_pix )/ h;
 
 	x1  = x1 - ((w-163)/h); y1 = -y1 + (1.0);
-//	cout<<x1<< " yoyo"<<y1<<endl;
 	for(int i=0;i<balls.size();i++)
 	{	double x_ball=  balls[i]->xcord; double y_ball = balls[i]->ycord;
 		double d= sqrt(pow(x_ball-x1,2)+pow((y_ball-y1),2)) - act[i];
 		if(d<0)
 		{	pos=i;break;}
-	 }
-	return pos;
 	}
+	
+	return pos;
+}
 
 int ball_number=0;
-void ball_delete(){
-	if(ball_number!=-1)
+			// deleting the clicked ball	//
+void ball_delete()
+{
+	if(ball_number!=-1)			// rough value -1 //
 	{	balls.erase(balls.begin()+ball_number);
 		forcolor.erase(forcolor.begin()+ball_number);
-		newballs[ball_number].second=1;
-		threads.erase(threads.begin()+ball_number);
+		newballs[ball_number].second=1;					
+		if(threads[threads.size()-1].second>1)
+		{		threads[threads.size()-1].second - = 1;
+		}
+		else
+		{		threads.erase(threads.begin()+(threads.size()-1));
+		}
+		
 		loc.erase(loc.begin()+ball_number);
 		forpause.erase(forpause.begin()+ball_number);
 		database.erase(database.begin() + ball_number);
@@ -378,117 +355,156 @@ void ball_delete(){
 }
 
 int cou;
-
+				// mouse click co-ordinates	//
 
  void myGlutMouse(int button, int button_state, int x, int y ) //return ball _number on which mouse is clicked
 {	
 	
 	a=make_pair(x,y);
-
 	ball_number= deleteball(a.first,a.second);
-	cout<<ball_number<<"kkkkkk"<<endl;
 	glutPostRedisplay();
 }
-
+						// show speed	//
 void showspeed(int ball_number){
 	if(newballs[ball_number].second==0){
 		xspee=forpause[ball_number].first;
 		yspee=forpause[ball_number].second;
 	}
 }
-	
-vector<double> stop_acc;
+					// show new x->speed	//
 void setnewxspeed(int ball_number){
 	forpause[ball_number].first=xspee;
 }
-
+					// show new y->speed	//
 void setnewyspeed(int ball_number){
 	forpause[ball_number].second=yspee;
 }
+			
+				
 
-
-
-vector<pair<double,double> >different;
+vector<pair<double,double> >different;				// vector with points of collision 	//
 vector<int> start_1;
-
+						//  update function 	//
+						
 void* update(void* arg)
 {	long counter;
-	counter = (long)arg;
-	//cout<<counter<<" bn0"<<endl;
 	pthread_mutex_lock(&imutex);
+	counter = (long)arg;
 	Message mes1 ;
 	mes1.xcord = balls[counter]->xcord ; mes1.ycord = balls[counter]->ycord; mes1.xspeed = balls[counter]->xspeed ; mes1.yspeed = balls[counter]->yspeed ; mes1.radius = balls[counter]->radius;
-	while(database[counter].size()!=0)
-	{	
-		Message m = database[counter].front();
+	if(counter<threads.size()-1)
+	{	for(int i=counter*no_perthr;i<counetr*no_perthr + no_perthr ;	i++	)
+		{	while(database[i].size()!=0)				// messages sent to one thread whose id = counter being checked	//
+			{	
+				Message m = database[i].front();
+				
+				pair<double,double> point1 = balls[i]->Collision(m/*(ch[counter][j],collide[counter],collide[j]*/);
 		
-		//cout<<"bn1"<<endl;
-		 
-		//cout<<"bn2"<<endl;		
-		pair<double,double> point1 = balls[counter]->Collision(m/*(ch[counter][j],collide[counter],collide[j]*/);
-		//cout<<"bn3"<<endl;		
-		database[counter].pop();				
-		if(point1.first!=0&&point1.second!=0)
-		{	
-			//mes1.type = "Collided";
-			different.push_back(point1);
+				database[i].pop();				
+				if(point1.first!=0&&point1.second!=0)
+				{	
+					different.push_back(point1);
+				}
+			}
+			for(int j=0;j<database.size();j++)					//  messages sent to the other balls via message	//
+			{
+			if(j!=i) database[j].push(mes1);
+			}
 		}
-		//else mes1.type ="Not Collided";
-		//database[m.label].push(mes1);
+		for(int i=counter*no_perthr;i<counetr*no_perthr + no_perthr ;	i++	)
+		{	balls[i]->Reflection(*b,reflect.at(i));
+		}
+		for(int i=counter*no_perthr;i<counetr*no_perthr + no_perthr ;	i++	)
+		{	balls[i]->Move();
+		}
+		
+		
 	}
-	
-	for(int i=0;i<database.size();i++)
-	{
-		if(i!=counter) database[i].push(mes1);
+	 else{
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			while(database[i].size()!=0)				// messages sent to one thread whose id = counter being checked	//
+			{	
+				Message m = database[i].front();
+				
+				pair<double,double> point1 = balls[i]->Collision(m/*(ch[counter][j],collide[counter],collide[j]*/);
+		
+				database[i].pop();				
+				if(point1.first!=0&&point1.second!=0)
+				{	
+					different.push_back(point1);
+				}
+			}
+			for(int j=0;j<database.size();j++)					//  messages sent to the other balls via message	//
+			{
+			if(j!=i) database[j].push(mes1);
+			}	
+		}
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			balls[i]->Reflection(*b,reflect.at(counter));
+		}
+		for(int i=counter*no_perthr;i<balls.size();i++){
+			balls[i]->Move();
+		}
 	}
+}
+												
+
 	//pthread_mutex_unlock(&imutex);
-	balls[counter]->Reflection(*b,reflect.at(counter));
-	
-	balls[counter]->Move();
+
 	pthread_mutex_unlock(&imutex);
 }
 
-
+				// ball adding at random position	//
 
 
 void badd(void){
 	double w = glutGet(GLUT_WINDOW_WIDTH);
 	double h = glutGet(GLUT_WINDOW_HEIGHT);
 	int i=balls.size();
-	pthread_t* thr = new pthread_t;
-	threads.push_back(thr);	
-	double rad = 0.05,xs=0,ys=0,x=0,y=0;
+							// thread added	//
+	if (threads[threads.size()-1].second < no_perthr)
+	{
+		threads[threads.size()-1].second +=1;
+	}
+	else{
+		pthread_t* thr = new pthread_t;
+		pair<pthread_t*,int> a = make_pair(thr,1);
+		threads.push_back(a);		
+	}
+	double rad =(rad()%100)/1000.0,xs=0,ys=0,x=0,y=0;
 	int chi= addrandom(rad);
 	act[i]=rad;
-
 	if(chi==1)
 	{	 x=loc[i].first-((w-163)/h); y=loc[i].second-1.0;
 	}
-	cout<<x<<" "<<y<<"check"<<balls.size()<<endl;
 	Circle* newball = new Circle(rad,xs,ys,x,y);
 	pair<Circle*,bool> ain=make_pair(newball,0);
-	newballs.push_back(ain);
-	newball->acc_y=0;
-	newball->pau=1;
+	newballs.push_back(ain);						
+	newball->acc_y=0;									// acceleration put to zero	//
+	newball->pau=1;											// pause of ball=1	//								
 	balls.push_back(newball);
 
 	int a=random()%(colvector.size());
-	forcolor.push_back(a);
-	reflect.push_back(0);
-	forpause.push_back(make_pair(0,0));
-	queue<Message> q;
+	forcolor.push_back(a);												
+	reflect.push_back(0);												
+	forpause.push_back(make_pair(0,0));									
+	queue<Message> q;													// a new queue for a new ball added	//
 	database.push_back(q);
+
 }
 
 int ch=0;
-int ronak=0;
+int ronak=0;									// the TOP coder //
 int water=0;
+
+			//  contolling the toolbox button	//
+			
  void control_cb(int control)
  {
 
-  if (nabled==1){
+  if (nabled==1){									//      pause is activated	//
  
-   		if(ch==0)
+   		if(ch==0)											// till pause is on for the very first time// 
    		{
 	   		for(int i=0;i<balls.size();i++)
 	   		{	pair<double,double> a = make_pair(balls[i]->xspeed,balls[i]->yspeed);
@@ -501,31 +517,33 @@ int water=0;
 	   		ch ++;
 	   	}
 
-   		if (control==add)
+   		if (control==add)										// pause and then add									
    		{	cout<<"duke"<<endl;
    			badd();
-   			control=0;
+   			control=0;									
    			if (balls.size()==1)
    			{
-   				ronak=1;
+   				ronak=1;										
    			}
      	}
 
    		 
-   		else if(control==Delete){
-   			if(balls.size()==1){
-   				ronak=0;
-   			}
-  			ball_delete();
-     		 control = 0;
-    	 }
-    	 else if(control==idx){
+   		else if(control==Delete){				/// pause and delete 
+   			if(balls.size()==1)
+			{
+	   			{
+				   	ronak=0;
+   				}
+  				ball_delete();
+     			 control = 0;
+    		}
+    	 else if(control==idx){								//  set new xspeed
     	 	setnewxspeed(ball_number);
     	 }
-    	 else if(control==idy){
+    	 else if(control==idy){									// set new yspeed
     	 	setnewyspeed(ball_number);
     	 }
-    	 else if (control==show){
+    	 else if (control==show){							// show the speed
     	 	cout<<xspee<<"  "<<yspee<<endl;
     	 	 showspeed(ball_number); 
     	 	 xyz->set_float_val(xspee);
@@ -539,7 +557,7 @@ int water=0;
   //  		cout<<water<<endl;
    		if( control!= add && control!= Delete && control!= idx &&control!=idy && control != show && control!=watercontrol)
    		{
-   			if(ronak!=1)
+   			if(ronak!=1)						
    			{
    				for(int i=0;i<balls.size();i++)
    				{
@@ -572,7 +590,7 @@ int water=0;
 			}
 			
 		}
-		if ( water ==0){
+		if (water==0){
 
 			transp=0.5;
 			for(int i=0;i<balls.size();i++){
