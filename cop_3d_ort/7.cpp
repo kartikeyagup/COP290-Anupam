@@ -236,18 +236,17 @@ void keyOperations(void){
   }
 
 
-/* TO BE EDITED BY ANIKET
 int addrandom(double radius)
 {	int h=0;
 	double w = glutGet(GLUT_WINDOW_WIDTH);
 	double ht = glutGet(GLUT_WINDOW_HEIGHT);
-	int pixel_l = w, pixel_w = ht;
-	int max=pixel_l*pixel_w;
-	double ortho_x  = 1.0*((w-163)/ht)*2.0;
-	double ortho_y = 1.0*2.0;
-	double len = ortho_x/pixel_l; // along the length
-	double width = ortho_y/pixel_w; // along the width
+	int max=pix*piy*piz;
+	len = ortho_x/pix;
+	width = ortho_y / piy;
+	hei = ortho_z / piz;
+
 	double min1 = min(len,width);
+	min1 = min(min1,hei);
 	raw[balls.size()]=(double)radius/(double)min1;
 	radius= radius/(double)min1;
 	int counti=0;
@@ -256,33 +255,40 @@ while(h==0)
 {	cre = random()%max;
 	double d =1000000000.0;
 	//cout<<cre<<" cre"<<endl;
-	int y_dis2 = cre%pixel_l;
-		if(y_dis2==0) y_dis2 = pixel_l;
-		int x_dis2 = cre/pixel_l + 1;
-		if( x_dis2 >= radius + 1 && x_dis2 + radius <= pixel_w && y_dis2 >= radius + 1 && y_dis2 + radius <= pixel_l )
+		int cond = cre%(pix*piy);
+		if(cond==0) cond = pix*piy;
+		int y_2 = cond/pix + 1;
+		if(cond%pix==0)y_2 = cond/pix;
+		int x_2 = cond%pix;  if(x_2==0) x_2 = pix;
+		int z_2 = cre/(pix*piy) + 1; if(cre%(pix*piy)==0) z_2 = cre/(pix*piy) ;
+		if( x_2 >= radius + 1 && x_2 + radius <= pix && y_2 >= radius + 1 && y_2 + radius <= piy && z_2 >= raius +1 && z_2 + radius <= piz )
 		{ for(int i=0;i<balls.size();i++)
-		 {		int x_dis1= int(double (balls[i]->xcord+((w-163)/ht)) /double (min1) + 1) ;
-				int y_dis1 = int( (double)(balls[i]->ycord+1.0) / double(width) + 1);
-				d = min(d,sqrt((x_dis1-y_dis2)*(x_dis1-y_dis2)+(y_dis1-x_dis2)*(y_dis1-x_dis2))-raw[i]);
+		 {		int x_1= int(double (balls[i]->position->x+700) /double (min1) + 1) ;
+				int y_1 = int( (double)(balls[i]->position->y+700) / double(width) + 1);
+				int z_1  = int( (double)(balls[i]->position->z + 700 )/double (hei) + 1);
+				d = min(d,sqrt((x_1-x_2)*(x_1-x_2)+(y_1-y_2)*(y_1-y_2)+(z_1-z_2)*(z_1-z_2))-raw[i]);
 			
 			
 	    	}
 		 if(d>=radius)
 				{	pos_cl.push_back(cre);h++;}
 		}
-		cout<<"chotu"<<endl;
+		//cout<<"chotu"<<endl;
 		counti++;
 		if(counti>10000)
 			{	break;}
-	}
+}
 	if(h==1)
-	{	int y3 = cre%pixel_l;
-		if(y3==0)y3 = pixel_l;
-		int x3 = cre/pixel_l + 1;
-		loc.push_back((make_pair(double(y3-1)*len,double(x3-1)*width)));
+	{	int cond = cre%(pix*piy);
+		if(cond==0) cond = pix*piy;
+		int y_2 = cond/pix + 1;
+		if(cond%pix==0)y_2 = cond/pix;
+		int x_2 = cond%pix;  if(x_2==0) x_2 = pix;
+		int z_2 = cre/(pix*piy) + 1; if(cre%(pix*piy)==0) z_2 = cre/(pix*piy) ;
+		p.push_back((co_or(double(x_2-1)*len-700.0,double(y_2-1)*width-700.0,double(z_2-1)*hei-700.0)));
 		}
-		return h;
-	}
+	return h;
+}
 
 
 
@@ -291,14 +297,15 @@ void badd(void){
 	double w = glutGet(GLUT_WINDOW_WIDTH);
 	double h = glutGet(GLUT_WINDOW_HEIGHT);
 	int i=balls.size();
-	
+	Vect* spee = new Vect(0,0,0); Vect* pos = new Vect(0,0,0);
 	double rad = 0.05,xs=0,ys=0,x=0,y=0;
 	int chi= addrandom(rad);
 	act[i]=rad;	
+	spee->x=0;spee->y=0;spee->z=0;
 	if(chi==1)
-	{	 x=loc[i].first-((w-163)/h); y=loc[i].second-1.0;
+	{	 pos->x=p[i].x-700; pos->y=p[i].y-700;pos->z=p[i].z-700;
 	}
-	Circle* newball = new Circle(rad,xs,ys,x,y);
+	Circle* newball = new Circle(rad,pos,spee);
 	balls.push_back(newball);
 	int a=random()%(colvector.size());
 	forcolor.push_back(a);
@@ -312,7 +319,7 @@ void badd(void){
 		threads.push_back(a);		
 	}
 	
-}*/
+}
 
 void control1_cb(int control){
    // if (nabled==1){
@@ -388,8 +395,8 @@ void random(int n)
 		cre = (cre + max)%max;
 		double d = 100000000.0;
 		int cons  = cre%(pix*piy);if(cons==0)cons=piy*pix;
-		int y1 = cons/pix + 1 ; int x1 = cons%pix ; if(x1==0) x1 = pix;;
-		int z1 =  cre/(pix*piy) + 1;
+		int y1 = cons/pix + 1 ;if(cons%pix==0)y1 = cons/pix; int x1 = cons%pix ; if(x1==0) x1 = pix;
+		int z1 =  cre/(pix*piy) + 1;if(cre%(pix*piy)==0)z1 = cre/(pix*piy);
 		if(x1>=raw[number-1]+1&&x1+raw[number-1]<=pix&&y1>=raw[number-1]+1&&y1+raw[number-1]<=piy&&z1>=raw[number-1]+1&&z1+raw[number-1]<=piz)
 		{	for(int i=0;i<pos.size();i++)
 			{	int create =  pos[i]%(pix*piy);

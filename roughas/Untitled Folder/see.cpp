@@ -43,7 +43,7 @@ vector<int> forcolor;
 Rectangle* b=new Rectangle();
 double asp;
 vector<bool> reflect;
-vector<pthread_t*> threads;
+
 pair<double,double>* centre;
 double r;
 double g;
@@ -212,8 +212,8 @@ int random(int n)
 	int chi=1;
 	int last=0;
 	int cre=0;
-	double len = ortho_x/pixel_l; // along the length
-	double width = ortho_y/pixel_w; // along the width
+	double len = ortho_x/(double)pixel_l; // along the length
+	double width = ortho_y/(double)pixel_w; // along the width
 	double min1 = min(len,width);
 	for(int i=0;i<n;i++)
 	{	raw[i]=double (act[i])/(double)min1;
@@ -237,6 +237,7 @@ int random(int n)
 		{	
 			for(int i=0;i<pos_cl.size();i++)
 			{	int x_dis1= pos_cl[i]/pixel_l+1;
+				if(pos_cl[i]%pixel_l==0)x_dis1 = pos_cl[i]/pixel_l;
 				int y_dis1 = pos_cl[i]%pixel_l;	
 				if(y_dis1==0)y_dis1=pixel_l;
 				d = min(d,sqrt((x_dis1-x_dis2)*(x_dis1-x_dis2)+(y_dis1-y_dis2)*(y_dis1-y_dis2))-raw[i]);	//minimum distance 
@@ -249,7 +250,7 @@ int random(int n)
 		}
 			counter++;
 			if(counter>10000)
-			{break;	}
+			{break;}
 	}
 	for(int i=0;i<pos_cl.size();i++)
 	{	int num = pos_cl[i]; 
@@ -305,7 +306,7 @@ while(h==0)
 		int x3 = cre/pixel_l + 1;
 		if(cre%pixel_l==0)x3=cre/pixel_l;
 		loc.push_back((make_pair(double(y3-1)*len,double(x3-1)*width)));
-		}
+	}
 	
 		return h;
 }
@@ -534,6 +535,7 @@ int water=0;
 	   			{
 				   	ronak=0;
    				}
+   			}
   				ball_delete();
      			 control = 0;
     		}
@@ -550,11 +552,8 @@ int water=0;
     	 	 ysp->set_float_val(yspee);
     	 }
    	}
-   	if(nabled==0){ 
+   	if(nabled==0){ 										//pause is disabled//
 	   
-		
-			
-  //  		cout<<water<<endl;
    		if( control!= add && control!= Delete && control!= idx &&control!=idy && control != show && control!=watercontrol)
    		{
    			if(ronak!=1)						
@@ -577,10 +576,10 @@ int water=0;
 
 	}
 
-		if(water==1)
+		if(water==1)											// water add//
 	   	{
 			transp=0;
-			for(int i=0;i<balls.size();i++){
+			for(int i=0;i<balls.size();i++){							// acc_y=0//
 				balls[i]->pau=1;
 			}
 			if(nabled==0){
@@ -590,7 +589,7 @@ int water=0;
 			}
 			
 		}
-		if (water==0){
+		if (water==0){												// water delete//
 
 			transp=0.5;
 			for(int i=0;i<balls.size();i++){
@@ -600,7 +599,6 @@ int water=0;
 		   			ch = 0;	
 		   			cou=0;
 				}
-				//cout<<balls[i]->xspeed<<"  "<<balls[i]->yspeed<<endl;
 			}
 			
 		}
@@ -623,9 +621,8 @@ void display(void)
 	b->vertices[3].first = -1*ar;
  //	if(balls.size()>0)cout<<"kkpp"<<balls[balls.size()-1]->xspeed<<" "<<balls[balls.size()-1]->yspeed<<endl;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for(int i=0;i<balls.size();i++)
-	{	//glColor3d(0.0702,0.508,0.42);
-		//cout<<"ronak"<<endl;
+	for(int i=0;i<balls.size();i++)										// ball making	//
+	{	
 		glColor3d(finalvector[forcolor[i]]->x,finalvector[forcolor[i]]->y,finalvector[forcolor[i]]->z);
 		
 		glPushMatrix();
@@ -635,7 +632,7 @@ void display(void)
 	}	
 	int rc;	
 	
-	for(int i=0;i<balls.size();i++)
+	for(int i=0;i<balls.size();i++)						// thread calling function //
 	{
 		rc = pthread_create(threads.at(i),NULL,update,(void*)i);
 		if(rc)
@@ -644,11 +641,11 @@ void display(void)
 			exit(1);
 		}
 	}
-	for(int i=0;i<balls.size();i++) pthread_join(*threads.at(i),NULL);
+	for(int i=0;i<balls.size();i++) pthread_join(*threads.at(i),NULL);			// joining threads	//
     	//	cout<<1<<endl;
     		int counter1=0;
     		int yet=0;
-		while(yet<0&&different.size()!=0)
+		while(yet<0&&different.size()!=0)						// to  check ball making//
 			{	for(int j=0;j<different.size();j++)
 			{ 	glColor3d(0,0,0);
  				glPushMatrix();
@@ -658,34 +655,22 @@ void display(void)
  		//	glclear();
 			glPopMatrix();
 			
-			colorcube();
+			colorcube();							// color of the water cube created	//
 			glutSwapBuffers();
  				
  			glutPostRedisplay();
 			}yet++;
 
 		}
-		// while(counter1<100&&different.size()!=0){
-		// 	for(int j=0;j<different.size();j++)
-		// 	{
-		// 	for(int k=0;k<2;k++)
-		// 		{	int l; if(k==0) l=2*j;if(k==1)l=2*j+1;
-		// 			glColor3d(0,1,0);
-		// 			glPushMatrix();
-		// 			glTranslated(balls[start_1[l]]->xcord,balls[start_1[l]]->ycord,0);
-		// 		glutSolidSphere(balls[start_1[l]]->radius,50,50);
-		// 		glPopMatrix();
-				
-		// 	}}
-		// 	counter1++;
-		// }
 			
 	 
-	 different.resize(0);
- 	colorcube();
- 	glutSwapBuffers();
-	 glutPostRedisplay();
+		 different.resize(0);
+ 		colorcube();
+ 		glutSwapBuffers();
+		 glutPostRedisplay();							// creates the display	//
 } 
+ 
+ 			//  light effects	//
  
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -707,9 +692,9 @@ int main(int argc, char *argv[])
 		n= atoi(argv[1]);
 		cout<<"Enter no of balls"<<endl;
 		for(int i=0;i<n;i++) reflect.push_back(0);
-				for(int i=0;i<n;i++)
-			{	act[i]=(double)(rand()%100+40)/1000.0; }
-	     glutInit(&argc, argv);
+		for(int i=0;i<n;i++)
+		{	act[i]=(double)(rand()%100+40)/1000.0; }
+	    glutInit(&argc, argv);				/// intialises the intiit //	
 	    double x=0;
 	    double y=0;
 	    double rcolor=1;
@@ -727,44 +712,32 @@ int main(int argc, char *argv[])
 	 	GLUI_Master.set_glutMouseFunc( myGlutMouse );
 		int a;
 		a = random(n);
-		a--;
+		a--;	
 	
 	addcolors();
 	n=a;
 	for(int i=0;i<n;i++){
-		double x=loc[i].first-((w-163)/h)/*-5+2*i*/,y=loc[i].second-1.0/*-5+2*i*/,rad=act[i],/*random()%2/10.0+0.1*/xs=/*-30*/rand()%10 - 8,ys=/*-30*/rand()%10 - 8;
+		double x=loc[i].first-((w-163)/h),y=loc[i].second-1.0,rad=act[i],xs=rand()%10 - 8,ys=rand()%10 - 8;
 		//cin>>rad>>xs>>ys>>x>>y;;
 		Circle* a=new Circle(rad,xs,ys,x,y);
 		balls.push_back(a);
 		queue<Message> q;
-		database.push_back(q);
+		database.push_back(q);						// creating the database
 	    }
-	    /*Circle* a = new Circle(1,0,0,0,0);
-	    balls.push_back(a);
-	    Circle* f = new Circle(1,50,0,-5,0);
-	    balls.push_back(f);
-	    Circle* c = new Circle(1,-50,0,5,0);
-	    balls.push_back(c);
-	    Circle* d = new Circle(1,0,50,0,-5);
-	    balls.push_back(d);
-	    Circle* e = new Circle(1,0,-50,0,5);
-	    balls.push_back(e);*/
-	    // cout<<balls[0]->xcord<<endl;
-	    // cout<<balls[0]->ycord<<endl;
-	    // cout<<balls[0]->xspeed<<" "<<balls[0]->yspeed<<endl; 
-	    for (int i=0;i<balls.size();i++){
+	    for (int i=0;i<balls.size();i++)							// making a ball with a pair bool added 
+		{
 	    	pair<Circle*,bool> a=make_pair(balls[i],0);
 	    	
 	    	newballs.push_back(a);
 	    }
-	   	for(int i=0;i<balls.size();i++){
+	   	for(int i=0;i<balls.size();i++){						// random color alloted	//
 		
-		int a=random()%(colvector.size());
-		forcolor.push_back(a);
-	}
+			int a=random()%(colvector.size());
+			forcolor.push_back(a);
+		}
 	   //threads= new pthread_t[balls.size()];
 
-	    for(int i=0;i<n;i++) 
+	    for(int i=0;i<n;i++) 													// threads created //
 	    {
 	    	pthread_t* thr = new pthread_t;
 	    	threads.push_back(thr);
@@ -776,15 +749,15 @@ int main(int argc, char *argv[])
 	    GLUI *glui = GLUI_Master.create_glui_subwindow( main_window, 
 	              GLUI_SUBWINDOW_RIGHT );
 	   	glui->set_main_gfx_window( main_window );
-	   	new GLUI_Checkbox( glui, "Pause", &nabled,2,control_cb);   
-	   	new GLUI_Button( glui, "add ball", add, control_cb );
-	   	new GLUI_Button( glui, "Delete Ball", Delete, control_cb );
+	   	new GLUI_Checkbox( glui, "Pause", &nabled,2,control_cb);   			//   glui tool box uses //										
+	   	new GLUI_Button( glui, "add ball", add, control_cb );						// add	//
+	   	new GLUI_Button( glui, "Delete Ball", Delete, control_cb );						// delete	//
 	  
 	  //new GLUI_Button( glui, "Play", play, control_cb );
-	  	new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );
+	  	new GLUI_Button( glui, "Quit", 0,(GLUI_Update_CB)exit );						// quit	//
 	   	new GLUI_Button( glui, "Show speed", show, control_cb );
-	  	GLUI_Spinner *x_spinner = 
-	    new GLUI_Spinner( glui, "x-speed",GLUI_SPINNER_FLOAT, 
+	  	GLUI_Spinner *x_spinner = 															// spinners	//
+	    new GLUI_Spinner( glui, "x-speed",GLUI_SPINNER_FLOAT, 										
 	                      &xspee,idx,control_cb);
 	  	x_spinner->set_float_limits( -20.0, 20.0 );
 
@@ -795,14 +768,14 @@ int main(int argc, char *argv[])
 
 	  	xyz=new GLUI_EditText( glui, "ball's xspeed", &xspee, 2,control_cb );
 	 	ysp=new GLUI_EditText( glui, "ball's yspeed", &yspee, 2,control_cb );
-	 	new GLUI_Checkbox( glui, "Delete water", &water,watercontrol,control_cb);
+	 	new GLUI_Checkbox( glui, "Delete water", &water,watercontrol,control_cb);				//  checkbox	//
 	  	glui->sync_live();
 	  	GLUI_Master.sync_live_all();
-	    glEnable(GL_CULL_FACE);
+	    glEnable(GL_CULL_FACE);													
 	    glCullFace(GL_BACK);
-	 
+	 																				
 	    glDepthFunc(GL_LESS); 
-	 
+	 																			//  light effects	//
 	    glEnable(GL_BLEND);
 	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	    glEnable(GL_LIGHT0);
@@ -820,7 +793,7 @@ int main(int argc, char *argv[])
 	    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
 	    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 	 
-	    glutMainLoop(); 
+	    glutMainLoop();																			/// function without return	 	// 
 	 
 	    return EXIT_SUCCESS;
 	}
