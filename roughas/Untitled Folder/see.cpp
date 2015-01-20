@@ -42,7 +42,7 @@ vector<int> forcolor;
 Rectangle* b=new Rectangle();
 double asp;
 vector<bool> reflect;
-vector<pthread_t*> threads;
+vector<pair<pthread_t*,int> > threads;
 pair<double,double>* centre;
 double r;
 double g;
