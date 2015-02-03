@@ -1,5 +1,0 @@
-execute:Circle1.cpp Rectangle.cpp Vect.cpp red.cpp
-	g++ -std=c++11 Circle1.cpp Rectangle.cpp Vect.cpp red.cpp -lpthread -lGL -lGLU -lglut -lglui
-	./a.out $(num_thread)
-clear:
-	rm -rf *o execute
