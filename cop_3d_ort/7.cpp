@@ -660,7 +660,7 @@ int main(int argc, char *argv[])
 	    n= atoi(argv[1]);
 	    int m=n;
 		no_perthr=n/m;					
-		last=m % n;
+		last=n%m;
 	    cout<<"Enter no of balls"<<endl;
 	    //threads = new pthread_t[n];
 	    glutInit(&argc, argv);
@@ -755,7 +755,7 @@ int main(int argc, char *argv[])
 		m=atoi(argv[2]);
 		int n = atoi(argv[1]);
 		no_perthr=n/m;					
-		last=m % n;
+		last=n%m;
 	    //threads = new pthread_t[n];
 	    glutInit(&argc, argv);
 	    glutInitWindowSize(1853,1027);

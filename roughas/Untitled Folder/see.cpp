@@ -32,7 +32,7 @@ using namespace std;
 int nabled=0;
 float xspee=0;
 float yspee=0;
-int   main_window;
+int main_window;
 double maxspeed=100;
 pthread_mutex_t imutex; //= PTHREAD_MUTEX_INITIALIZER;
 vector<Circle*> balls;
@@ -55,7 +55,7 @@ int xwindow, ywindow, wid, heig ;
 GLUI_EditText *xyz;
 GLUI_EditText *ysp;
 int last=0;					// no of the balls controlled by the threads	//
-int num_perthr;				// no controlled by each thread	//
+int no_perthr=0;				// no controlled by each thread	//
 
 int watercontrol=1000;
 			// database //
@@ -389,10 +389,11 @@ void* update(void* arg)
 {	long counter;
 	pthread_mutex_lock(&imutex);
 	counter = (long)arg;
-	Message mes1 ;
-	mes1.xcord = balls[counter]->xcord ; mes1.ycord = balls[counter]->ycord; mes1.xspeed = balls[counter]->xspeed ; mes1.yspeed = balls[counter]->yspeed ; mes1.radius = balls[counter]->radius;
+	
 	if(counter<threads.size()-1)
 	{	for(int i=counter*no_perthr;i<counetr*no_perthr + no_perthr ;	i++	)
+		Message mes1 ;
+		mes1.xcord = balls[i]->xcord ; mes1.ycord = balls[i]->ycord; mes1.xspeed = balls[i]->xspeed ; mes1.yspeed = balls[i]->yspeed ; mes1.radius = balls[i]->radius;
 		{	while(database[i].size()!=0)				// messages sent to one thread whose id = counter being checked	//
 			{	
 				Message m = database[i].front();
@@ -421,6 +422,8 @@ void* update(void* arg)
 	}
 	 else{
 		for(int i=counter*no_perthr;i<balls.size();i++){
+			Message mes1 ;
+			mes1.xcord = balls[i]->xcord ; mes1.ycord = balls[i]->ycord; mes1.xspeed = balls[i]->xspeed ; mes1.yspeed = balls[i]->yspeed ; mes1.radius = balls[i]->radius;
 			while(database[i].size()!=0)				// messages sent to one thread whose id = counter being checked	//
 			{	
 				Message m = database[i].front();
@@ -436,7 +439,7 @@ void* update(void* arg)
 			for(int j=0;j<database.size();j++)					//  messages sent to the other balls via message	//
 			{
 			if(j!=i) database[j].push(mes1);
-			}	
+			}
 		}
 		for(int i=counter*no_perthr;i<balls.size();i++){
 			balls[i]->Reflection(*b,reflect.at(counter));
@@ -445,8 +448,7 @@ void* update(void* arg)
 			balls[i]->Move();
 		}
 	}
-}
-												
+				
 
 	//pthread_mutex_unlock(&imutex);
 
@@ -853,7 +855,7 @@ int main(int argc, char *argv[])
 	    double gcolor=1;
 	    double bcolor=1;
 	    glutInitWindowSize(1280,720);
-	     main_window=glutCreateWindow("Screen Saver"); 
+	    main_window=glutCreateWindow("Screen Saver"); 
 	    //glutFullScreen();
 	    glutInitWindowPosition(b->xcord,b->ycord);
 	    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); 
