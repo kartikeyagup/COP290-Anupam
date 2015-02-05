@@ -1,0 +1,15 @@
+Abstract
+Overall Design
+Subcomponents	
+	GUI
+	Networking
+		Sharing
+		Security
+	Syncing		
+	File handling
+		Minimizing data usage
+		Handling changes in the files
+	Persistent Storage
+Testing of subcomponents
+Interaction between subcomponents
+Extra features
