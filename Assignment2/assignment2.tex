@@ -8,104 +8,139 @@
 
 
 \title{\vspace{-2cm}{Assignment 1: COP 290: Design Document}}
+
 \author{Aniket Khandelwal(2013CS10209),
-Anupam Khandelwal(2013CS10212),\\
-Ronak Khandelwal(2013CS50295)}
+		Anupam Khandelwal(2013CS10212),\\
+		Ronak Khandelwal(2013CS50295)
+}
+
 \date{\today}
+
 \lstset{
-frame=tb, % draw a frame at the top and bottom of the code block
-tabsize=4, % tab space width
-showstringspaces=false, % don't mark spaces in strings
-numbers=left, % display line numbers on the left
-commentstyle=\color{green}, % comment color
-keywordstyle=\color{cyan}, % keyword color
-stringstyle=\color{} % string color
+	frame=tb, % draw a frame at the top and bottom of the code block
+	tabsize=4, % tab space width
+	showstringspaces=false, % don't mark spaces in strings
+	numbers=left, % display line numbers on the left
+	commentstyle=\color{green}, % comment color
+	keywordstyle=\color{cyan}, % keyword color
+	stringstyle=\color{} % string color
 }
 
 \begin{document}
 
-\maketitle
+	\maketitle
 
-\tableofcontents
-\pagebreak
+	\tableofcontents
+	\pagebreak
 
-\section{Abstract}
-We will build an online file management system \"MyDropBox\" in which a server machine maintains the files of multiple users. The user will use  a simple desktop application to 
-login into the system and can access his/her files after authentication. We will have two modes:
-\begin{itemize}
-\item Offline mode: In this we will transfer files from one folder to another within a system after the user login in the dekstop application
-\item Online mode: We will extend the offline mode by including a server so that the client can store and access the data which he has stored on the server
-\end{itemize}
-\section{Overall Design}
-\begin{itemize}
-\item We will start the assignment by building different subcomponents like GUI, server and client codes, sharing and handling of files and then we will do the testing of these subcomponents
-\item When we are done with testing of the subcomponents, we will link them together and get the offline mode working
-\item After the offline mode gets working, we will include the part of the server and get the online mode to run. We will ensure that all the data handling and data transfer is done in a secure way
-\end{itemize}
+	\section{Abstract}
+		We will build an online file management system ``MyDropBox''  in which a server machine maintains the files of multiple users. The user will use  a simple desktop application to login into the system and can access his/her files after authentication. We will have two modes:
+		\begin{itemize}
+			\item Offline mode: In this mode, the user will transfer files using the desktop application to the drop-box folder. Access to this folder will require authentication of the user
+			\item On-line mode: We will extend the offline mode by including a server so that the client can store and access the data which he has stored on the server after getting connected to the server
+		\end{itemize}
+	\section{Overall Design}
+		\begin{itemize}
+			\item We will start the assignment by building different subcomponents like GUI, server and client back ends, sharing and handling of files and then we will do the testing of these subcomponents
+			\item When we are done with testing of the subcomponents, we will link them together and get the offline and the online mode working
+			\item We will then ensure that the data handling and data transfer is done in a secure way
+		\end{itemize}
 
-\section{Details of the Sub Components}
-\subsection{User Interface}
-We will use QT Creator for designing the client Graphic User Interface. We will have different pages which will be as follows:
-\begin{itemize}
-\item First page will ask the user whether he is a new user or an existing one and the user will have to sign up if he is a new user otherwise he will sign in to the login page
-\item Second page is the login page. In this user will have to enter the username and password for authentication and if both matches with the information given by the user at the time of signup, then he will be able to login into his account
-\item If the user is a new user, he will have to sign up and fill the required information to create his account on \"MyDropBox\" and then he can sign in to access his account
-\item If the user has forgot the password, then we will ask him a security question, if the username is correct, which the user will give us at the time of creating his account. Then we will allow him to set new username and password
-\item In the final page, the user will be able to see files on the system and can do various operations on the files like deleting the files, adding new files and then finally he needs to press a sync button to store the file on the server. Also he can share the files with the other users while setting the appropriate permissions at the the same time
-\end{itemize}
-\subsection{Server part}
-TO BE DONE BY ANUPAM
-Write about the classes in points
-\subsection{Networking}
-\subsubsection{Sharing}
-\begin{itemize}
-\item We will use FTP(File transfer protocol) for creating connection between server and the client
-\item Then after setting up the connection, the user can share files with the other users. Also he can set the permissions to give certain level of access to the other user. In the backend, we will have the code which will assign the file and the permissions associated to it to the user to whom it has been shared
-\end{itemize}
-\subsubsection{Security}
-\begin{itemize}
-\item For secure connection between the client and the server, we will use OpenSSL.
-\item WRITE ABOUT WHAT WILL YOU DO IT OPENSSL
-\item \textbf{TO BE IMPROVED}We will also ensure that user can access the data after he has logged into the account. This will ensure that even if multiple user uses the same machine, one user can't access other user's data
-\end{itemize}
-\subsection{Syncing of the files}
-\begin{itemize}
-\item The user will be allowed to sync the files between the server and his own folder. This will ensure that he can access the files on any machine after logging into the application
-\item Our code at the backend will ensure that the syncing process goes smooth. If there are two versions of the same file, then we will check whether one of the two files (the file on the server or the file on the system) is newer. Then we will warn the user about the file which is newer and he can then take appropriate action to deal with the file
-\end{itemize}
-\subsection{File Handling}
-\subsubsection{Minimizing Data Usage}
-TO BE EDITED
-\subsubsection{Handling Changes in the files}
-TO BE EDITED
-\subsection{Persistent Storage}
-TO BE EDITED
-\section{Testing of the program}
-\subsection{Testing of Sub Components}
-\subsubsection{User Interface Testing}
-\begin{itemize}
-\item We will first test each page of the user interface by using different possible inputs
-\item After this we will do the testing of the whole interface by applying different possible combinations of input and seeing that the transitions between the pages and other things work correctly
-\end{itemize}
-\subsubsection{Testing of sharing of files TO BE EDITED}
-\begin{itemize}
-\item We will first do the unit testing of the classes that are needed to share the file. For this, we will test the constructors of each class, get and set functions of these classes.
-\item When we are done with the testing of the classes, we will test it by sharing files of different sizes first between the two folders in the same system(Offline mode) and then we will share the files between two systems and check whether the files are send correctly by running them and checking their sizes
-\end{itemize}
-\subsubsection{Testing of syncing of files}
-\begin{itemize}
-\item We will first do the testing of the classes in the same as we will do it in testing of sharing of files
-\item Then we will check the syncing in the offline mode by adding new files, deleting files and adding different version of the same file. We will test whether we are able to add and delete files in the other folder properly and also whether we are able to tell which of the files having different version is newer and whether we are to appropriately deal with this case
-\item After this, we will test the online syncing of the files on the same parameters which we have used in the offline mode
-\end{itemize}
-\subsubsection{Testing of file handling}
-TO BE DONE
-\subsubsection{Testing of persistent storage}
-TO BE DONE
-\subsection{Overall testing}
-After doing the unit testing of each subcomponent, we will link all the subcomponents and then we will test the whole program starting from user interface, setting connection between server and client, sharing data securely,with other user, syncing the data using the parameters which has been used during unit testing. Also we will check whether the files are handled in a proper way i.e. the data usage is optimized and the changes in the file are handled in a proper way or not. We will also check whether the user is able to access the files from the local folder without downloading the files even after the connection is lost.
-\section{Interaction between Sub Components}
-TO BE EDITED
-\section{Extra Features}
-TO BE EDITED
+	\section{Details of the Sub Components}
+		\subsection{User Interface}
+		We will use QT Creator for designing the ``client'' Graphic User Interface. We will have multiple pages in the user interface which will open according to the options chosen by the user on the current page. These windows are as follows:
+			\begin{itemize}
+				\item First page will ask the user whether he is a new user or an existing one and the user will have to sign up if he is a new user or  will sign in to move to the login page
+				\item Second page is the login page. In this user will have to enter the user name and password for authentication and if both matches with the information given by the user at the time of sign-up, then he will be able to login into his account
+				\item If the user is a new user, he will have to sign up and fill the required information to create his account on ``MyDropBox'' and then he can click on sign in to access his files and folders associated to his account on the server and the system
+				\item If the user has forgotten the password, then we will ask him a security question, after authentication of the user name, which the user will give us at the time of creating his account. Then we will allow him to set new user name and password
+				\item In the final page, the user will be able to see files on the system and can do various operations on the files like deleting the files, adding new files and then finally he needs to press a offline or online sync button to store the file on the system only or both on the system and the server. Also he can share the files with the other users while setting the appropriate permissions at the the same time
+			\end{itemize}
+		\subsection{Server back end}
+			TO DO ANUPAM
+			Write about the classes in points
+		\subsection{Networking}
+			\subsubsection{Sharing}
+				\begin{itemize}
+					\item We will use TCP(Transmission Control Protocol) for creating connection between server and the client
+					\item Then after setting up the connection, the user can share files with the other users using Socket Programming. Also he can set the permissions to give certain level of access to the other user. In the back end, we will have the code which will assign the file and the permissions associated to it to the user to whom it has been shared
+				\end{itemize}
+			\subsubsection{Security}
+				\begin{itemize}
+					\item For secure connection between the client and the server, we will use OpenSSL.
+					\item TO DO ANIKET WRITE ABOUT WHAT WILL YOU DO IT OPENSSL
+					\item We will protect the drop-box folder of the user with the password he uses to login to his account. This will ensure that even if many users use the same system, the data of one user will not be accessible by other users who use the same system.
+				\end{itemize}
+			\subsection{Syncing of the files}
+			\begin{itemize}
+				\item The user will be allowed to sync the files between the server and his own folder and also from the desktop application to his folder on the system. This will ensure that he can access the files on any machine after logging into the application
+				\item Our code at the back end will ensure that the syncing process goes smooth. If there are two different versions of the same file on the system and the server, then we will check which one of the two files (the file on the server or the file on the system) is newer.
+				\item We will select the newer file by taking the difference of the system time of the client and the server(say x). We will then take the difference between the value of x and the modified time of the one file. This is the final modified time of that file. Then the one with the higher value of modified time is the newer file. Then we will warn the user about the file which is newer and ask him to take appropriate action to deal with the file
+			\end{itemize}
+		\subsection{File Handling}
+			\subsubsection{Minimizing Data Usage}
+				\begin{itemize}
+					\item If the two files have exactly same content, then we will store only one of the files irrespective of whether they are uploaded by different users or the same user
+					\item We will compare the files bit by bit and then if every bit of one file matches with the corresponding bit of the other file, then the files are exactly same. In this case, we will upload only one of two files. This will minimize the data usage.
+				\end{itemize}
+			\subsubsection{Handling Changes in the files}
+				\begin{itemize}
+					\item 
+				\end{itemize}
+		\subsection{Persistent Storage}
+			\begin{itemize}
+					\item We will ensure that if the connection of the client with the server breaks, then he will not need to download the whole things again
+				\item We will do it by storing a variable which indicates whether the file is synced or not, and another variable which will indicate the size of the file that has been synced. 
+				\item After this, when the client is again connected to the server, the download will start again from the file which is partially synced
+			\end{itemize}
+	\section{Testing of the program}
+		\subsection{Testing of Sub Components}
+			\subsubsection{User Interface Testing}
+				\begin{itemize}
+					\item We will first test each form of the user interface by using different possible inputs
+					\item After this we will do the testing of the whole interface by applying different possible combinations of input and seeing that the transitions between the pages and other things work correctly
+				\end{itemize}
+			\subsubsection{Testing of sharing of files}
+				\begin{itemize}
+					\item We will first do the unit testing of the classes that are needed to share the file. For this, we will test the constructors of each class, get and set functions of these classes.
+					\item When we are done with the testing of the classes, we will test it by sharing files of different sizes first between the system folder and the application (Offline mode) and then we will share the files between two systems and check whether the files are send correctly by running them and checking their sizes
+				\end{itemize}
+			\subsubsection{Testing of syncing of files}
+				\begin{itemize}
+					\item We will first do the testing of the classes in the same as we will do it in testing of sharing of files
+					\item Then we will check the syncing in the offline mode by adding new files, deleting files and adding different version of the same file. We will test whether we are able to add and delete files from the desktop folder  and also whether we are able to tell which of the files having different versions is newer and whether we are to appropriately deal with this case
+					\item After this, we will test the online syncing of the files on the same parameters which we have used in the offline mode
+				\end{itemize}
+			\subsubsection{Testing of file handling}
+				We will test the file handling by:
+				\begin{itemize}
+					\item First, we will sync two files with exactly same content with the same account and then check whether only one file is uploaded on the server. Similarly, we will test this by syncing two files with two different accounts
+					\item \textbf{WRITE}
+				\end{itemize}
+			\subsubsection{Testing of persistent storage}
+				\begin{itemize}
+					\item We will test persistent storage by first downloading the files and breaking the connection in the middle of this process. Then, we will check the value of the variables associated with the files as mentioned above. We will then start downloading again and then check the point from which the downloading starts
+				\end{itemize}
+		\subsection{Overall testing}
+			After doing the unit testing of each subcomponent, we will link all the subcomponents and then we will test the whole program starting from user interface, setting connection between server and client, sharing data securely,with other user, syncing the data using the parameters which has been used during unit testing. Also we will check whether the files are handled in a proper way i.e. the data usage is optimized and the changes in the file are handled in a proper way or not. We will also check whether the user is able to access the files from the local folder without downloading the files even after the connection is lost.
+	\section{Interaction between Sub Components}
+		\subsection{User Authentication}
+			\begin{itemize}
+				\item The user name and password entered by the user on the desktop application will be transfered to the server. Then it will check whether the user name and the password are correct or incorrect. This is how the user credentials are verified and the user is allowed to login to the system if both the user name and password are verified
+				\item Also the data of the new user is linked to the server back end which stores the information about the new user
+			\end{itemize}
+		\subsection{File transfer}
+			\begin{itemize}
+				\item All the elements in the GUI that are entered by the user are transfered to the server back end with the help of file transfer from client to server PC. Also, the results which are evaluated in the server back end are transfered to the user interface. All this is done with the help of socket programming
+
+				\item Also the files that are synced by the authenticated user are transferred from the desktop to
+			\end{itemize}
+		\subsection{File syncing and sharing}
+			\begin{itemize}
+			\end{itemize}
+		\subsection{Front end and Back end}
+			\begin{itemize}
+			\end{itemize}
+	\section{Extra Features}
+		TO BE EDITED
 \end{document}
