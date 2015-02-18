@@ -132,15 +132,18 @@
 		\subsection{File transfer}
 			\begin{itemize}
 				\item All the elements in the GUI that are entered by the user are transfered to the server back end with the help of file transfer from client to server PC. Also, the results which are evaluated in the server back end are transfered to the user interface. All this is done with the help of socket programming
-
-				\item Also the files that are synced by the authenticated user are transferred from the desktop to
 			\end{itemize}
 		\subsection{File syncing and sharing}
 			\begin{itemize}
+				\item The files that are synced by the authenticated user are transferred from the desktop application to the server and from the server to the folder in the system
+				\item Also, the permissions set by the user for particular files are send to the server where the variables are assigned these permissions and are shared with other users according to the permission as specified by the user
 			\end{itemize}
 		\subsection{Front end and Back end}
 			\begin{itemize}
+				\item All the information filled by the user in the forms are send to the back end, where the server works on these information. It stores these information and verifies when they are again needed by the software application. After that, they are send to the front end according to which it takes action
+				\item Files on the client and the server system are displayed on the window in the desktop application. The user can sync the files between the server and client system. This is done by sending the information from the desktop application to the server which is then processed and according to it, files are transfered from server to client and client to server
 			\end{itemize}
 	\section{Extra Features}
+		TODO RONAK
 		TO BE EDITED
 \end{document}
