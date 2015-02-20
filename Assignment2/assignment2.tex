@@ -7,18 +7,11 @@
 \usepackage{color}
 
 
-\title{\vspace{-2cm}{Assignment 1: COP 290: Design Document}}
-
-\author{Aniket Khandelwal(2013CS10209),
-		Anupam Khandelwal(2013CS10212),\\
-		Ronak Khandelwal(2013CS50295)
-}
-
-\date{\today}
 
 \lstset{
+	breaklines=true,
 	frame=tb, % draw a frame at the top and bottom of the code block
-	tabsize=4, % tab space width
+	tabsize=1, % tab space width
 	showstringspaces=false, % don't mark spaces in strings
 	numbers=left, % display line numbers on the left
 	commentstyle=\color{green}, % comment color
@@ -27,7 +20,14 @@
 }
 
 \begin{document}
+	\title{\vspace{-2cm}{\textbf{}\\Assignment 2: COP 290: Design Document}}
 
+	\author{Aniket Khandelwal(2013CS10209),
+		Anupam Khandelwal(2013CS10212),\\
+		Ronak Khandelwal(2013CS50295)
+	}
+
+	\date{\today}
 	\maketitle
 
 	\tableofcontents
@@ -57,8 +57,81 @@
 				\item In the final page, the user will be able to see files on the system and can do various operations on the files like deleting the files, adding new files and then finally he needs to press a offline or online sync button to store the file on the system only or both on the system and the server. Also he can share the files with the other users while setting the appropriate permissions at the the same time
 			\end{itemize}
 		\subsection{Server back end}
-			TO DO ANUPAM
-			Write about the classes in points
+			\begin{itemize}
+				\item \textbf{Authentication.cpp : } It contains the file for authentication of user during signing in , storage of user data for signup and access to password using a security question if the user forgets his password.
+					\begin{lstlisting}[language=C++, caption={Header file of the class Authentication}]
+						class Authentication
+						{ 
+							private:
+								unordered_map<string , user> table;
+							public:
+								Authentication();
+								void sett(unordered_map<string , user> tab);
+								unordered_map<string , user> gett();
+								void adduser();
+								void deluser();
+								void isAuthenticated(string us , string pass);
+								void sec();
+								void verify();
+						};
+					\end{lstlisting}
+				
+				\item \textbf{Storage.cpp : } Stores the files that are present in server and client side as a data structure (hash map). It allows user to add files , delete files , share files , add user and delete user. It is the backbone of file management.
+					\begin{lstlisting}[language=C++, caption={Header file of the class Storage}]
+						class Storage
+						{
+							private:
+								//list of all files in server
+								unordered_map<string , int> allfiles;
+								//user to file list mapping
+								unordered_map<string , vector<filenames> > usertofilelist;	
+								//for name of files in server
+								int nextnum;		
+							public:
+								//constructor
+								Storage();
+								//set the list of all files
+								void setaf(unordered_map<string,int>);
+								//get all files list
+								unordered_map<string,int> getaf();
+								//set the user to file list map 
+								void setu(unordered_map<string,vector<filenames> > usertofilelist);
+								//get the user to file list map
+								unordered_map<string , vector<filenames> > getu();
+								//whether a file with same content already exists
+								string filexists(string filename);
+								// us -> username , info -> data that user fills while signup
+								void sharefile(string filename, string user1, string user2, bool permission);
+								void adduser(string us);
+								void addfile(string filename , string us);
+								void deletefile(string file, string us);
+								void deleteuser(string us);			
+						};
+					\end{lstlisting}
+				\item \textbf{Sync.cpp : } It allows the user to sync his files with the files of the server. It has a function that first checks which file is newer( server's or client's ) and act accordingly which side to update.
+					\begin{lstlisting}[language=C++, caption={Header file of the class Sync}]
+						class Sync
+						{
+							private:
+								string username;
+								//list of files of user sent by client
+								string* filelist;
+								//list of old files of users
+								string* oldfilelist;
+								//equate bases of time of 2 machines (required for persistent storage)
+								int timequate(string clientfile , string serverfile);
+								void getuser(string user);
+							public:
+								void Diff
+								//gets the action to be done as per modified time
+								vector<int> getaction();
+								//ouputs the blocks of difference ( for minimal data usage )
+								vector<string> diffplaces(string filename1, string filename2);
+								//syncs the file on both client and server side as per action
+								void syncfile(string us , string file);
+						}
+					\end{lstlisting}
+			\end{itemize}
 		\subsection{Networking}
 			\subsubsection{Sharing}
 				\begin{itemize}
@@ -68,14 +141,16 @@
 			\subsubsection{Security}
 				\begin{itemize}
 					\item For secure connection between the client and the server, we will use OpenSSL.
-					\item TO DO ANIKET WRITE ABOUT WHAT WILL YOU DO IT OPENSSL
-					\item We will protect the drop-box folder of the user with the password he uses to login to his account. This will ensure that even if many users use the same system, the data of one user will not be accessible by other users who use the same system.
+					\item OpenSSL will help us to transfer files on the network in an encrypted way, so that the data cannot be tapped while it is getting synced between client and the server.
+					\item The client uses the information sent by the server to authenticate the server. If the server cannot be authenticated, the user is warned of the problem that an encrypted and authenticated connection cannot be established. If the server has requested client authentication (an optional step in the process), the client also signs another piece of data that is unique to this process and known by both the client and server. Both the client and the server use the master secret to generate session keys which are symmetric keys, used to encrypt and decrypt information exchanged during the SSL session. The client and the server use the session keys to encrypt and decrypt the data they send to each other and to validate its integrity.
+					
+					%%%%% ANIKET WRITE 
+					
 				\end{itemize}
-			\subsection{Syncing of the files}
+		\subsection{Persistent Storage}
 			\begin{itemize}
-				\item The user will be allowed to sync the files between the server and his own folder and also from the desktop application to his folder on the system. This will ensure that he can access the files on any machine after logging into the application
-				\item Our code at the back end will ensure that the syncing process goes smooth. If there are two different versions of the same file on the system and the server, then we will check which one of the two files (the file on the server or the file on the system) is newer.
-				\item We will select the newer file by taking the difference of the system time of the client and the server(say x). We will then take the difference between the value of x and the modified time of the one file. This is the final modified time of that file. Then the one with the higher value of modified time is the newer file. Then we will warn the user about the file which is newer and ask him to take appropriate action to deal with the file
+				\item The user will be allowed to sync the files between the server and his own folder and also from the desktop application to his folder on the system. This will ensure that he can access the files on any machine after logging into the application from any system
+				
 			\end{itemize}
 		\subsection{File Handling}
 			\subsubsection{Minimizing Data Usage}
@@ -85,14 +160,10 @@
 				\end{itemize}
 			\subsubsection{Handling Changes in the files}
 				\begin{itemize}
-					\item 
+					\item If the user has changed the content of some file, then we will track down the changes in that file
+					\item After that, we will store only the unchanged version of the old file combined with the changes 
+					\item We will combine the changes and unchanged version of older file by using diff command to detect the changes and the position of the changes
 				\end{itemize}
-		\subsection{Persistent Storage}
-			\begin{itemize}
-					\item We will ensure that if the connection of the client with the server breaks, then he will not need to download the whole things again
-				\item We will do it by storing a variable which indicates whether the file is synced or not, and another variable which will indicate the size of the file that has been synced. 
-				\item After this, when the client is again connected to the server, the download will start again from the file which is partially synced
-			\end{itemize}
 	\section{Testing of the program}
 		\subsection{Testing of Sub Components}
 			\subsubsection{User Interface Testing}
@@ -115,11 +186,7 @@
 				We will test the file handling by:
 				\begin{itemize}
 					\item First, we will sync two files with exactly same content with the same account and then check whether only one file is uploaded on the server. Similarly, we will test this by syncing two files with two different accounts
-					\item \textbf{WRITE}
-				\end{itemize}
-			\subsubsection{Testing of persistent storage}
-				\begin{itemize}
-					\item We will test persistent storage by first downloading the files and breaking the connection in the middle of this process. Then, we will check the value of the variables associated with the files as mentioned above. We will then start downloading again and then check the point from which the downloading starts
+					\item Also, we will make the changes in the file, and then we will sync it. For testing, we will check the size fo the file saved on the server which should be less than the combined size of the older and the newer version
 				\end{itemize}
 		\subsection{Overall testing}
 			After doing the unit testing of each subcomponent, we will link all the subcomponents and then we will test the whole program starting from user interface, setting connection between server and client, sharing data securely,with other user, syncing the data using the parameters which has been used during unit testing. Also we will check whether the files are handled in a proper way i.e. the data usage is optimized and the changes in the file are handled in a proper way or not. We will also check whether the user is able to access the files from the local folder without downloading the files even after the connection is lost.
@@ -144,6 +211,26 @@
 				\item Files on the client and the server system are displayed on the window in the desktop application. The user can sync the files between the server and client system. This is done by sending the information from the desktop application to the server which is then processed and according to it, files are transfered from server to client and client to server
 			\end{itemize}
 	\section{Extra Features}
-		TODO RONAK
-		TO BE EDITED
+		\subsection{Encryption of User's Credentials}
+			\begin{itemize}
+				\item We will store the information of the user (username and password) after encryption
+				\item We will do it using RSA encryption algorithm
+				\item This will ensure the safety of user's credentials as even if someone gets the access to the data on the server, he will not be able to decrypt it
+			\end{itemize}
+		\subsection{Incomplete Downloading}
+			\begin{itemize}
+				\item We will ensure that if the connection of the client with the server breaks, then he will not need to download the whole things again
+				\item We will do it by storing a variable which indicates whether the file is synced or not, and another variable which will indicate the size of the file that has been synced. 
+				\item After this, when the client is again connected to the server, the download will start again from the file which is partially synced
+			\end{itemize}
+		\subsection{Taking care of the direction of syncing}
+			\begin{itemize}
+				\item Our code at the back end will ensure that the syncing process goes smooth. If there are two different versions of the same file on the system and the server, then we will check which one of the two files (the file on the server or the file on the system) is newer.
+				\item We will select the newer file by taking the difference of the system time of the client and the server(say x). We will then take the difference between the value of x and the modified time of the one file. This is the final modified time of that file. Then the one with the higher value of modified time is the newer file. Then we will warn the user about the file which is newer and ask him to take appropriate action to deal with the file
+			\end{itemize}
+		\subsection{Privacy of user's folder on client system}
+			\begin{itemize}
+				\item We will protect the drop-box folder of the user with the password he uses to login to his account. This will ensure that even if many users use the same system, the data of one user will not be accessible by other users who use the same system
+			\end{itemize}
+
 \end{document}
