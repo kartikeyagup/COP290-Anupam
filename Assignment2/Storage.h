@@ -29,7 +29,9 @@ class Storage
 		void adduser(string us , user info);
 		void addfile(string file , string us);
 		void deletefile(string file);
-		void deleteuser(string us);		
+		void deleteuser(string us);	
+		void equatetime(string t1 , string t2);
+		void syncfile(string us , string file);	
 		//void openlocation(string us);											//returns location of directory of a user
 };
 #endif
