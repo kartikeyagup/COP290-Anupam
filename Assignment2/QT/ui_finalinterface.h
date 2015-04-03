@@ -14,12 +14,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QListView>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QToolBar>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QWidget>
 
@@ -28,91 +29,89 @@ QT_BEGIN_NAMESPACE
 class Ui_Finalinterface
 {
 public:
-    QProgressBar *progressBar;
-    QListView *filelistview;
-    QListView *listView_2;
-    QLabel *label;
-    QLabel *label_2;
+    QWidget *centralWidget;
+    QPushButton *mkdir;
+    QPushButton *removedir;
     QTreeView *directoryview;
-    QWidget *layoutWidget;
-    QHBoxLayout *horizontalLayout;
     QPushButton *addfile;
-    QPushButton *Deletefile;
-    QPushButton *Sync;
-    QPushButton *DeleteAccount;
-    QWidget *layoutWidget1;
-    QHBoxLayout *horizontalLayout_2;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *deletefile;
+    QPushButton *openfile;
+    QPushButton *Share;
+    QPushButton *Rename;
+    QPushButton *RenameDir;
+    QPushButton *syncall;
+    QPushButton *syncselected;
+    QPushButton *Logout;
+    QProgressBar *progressBar;
+    QTreeView *filesystemview;
+    QListWidget *serverlist;
+    QMenuBar *menuBar;
+    QToolBar *mainToolBar;
+    QStatusBar *statusBar;
 
     void setupUi(QDialog *Finalinterface)
     {
         if (Finalinterface->objectName().isEmpty())
             Finalinterface->setObjectName(QStringLiteral("Finalinterface"));
-        Finalinterface->resize(819, 523);
-        progressBar = new QProgressBar(Finalinterface);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(430, 420, 171, 23));
-        progressBar->setValue(24);
-        filelistview = new QListView(Finalinterface);
-        filelistview->setObjectName(QStringLiteral("filelistview"));
-        filelistview->setGeometry(QRect(280, 80, 256, 301));
-        listView_2 = new QListView(Finalinterface);
-        listView_2->setObjectName(QStringLiteral("listView_2"));
-        listView_2->setGeometry(QRect(550, 80, 256, 301));
-        label = new QLabel(Finalinterface);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(180, 40, 101, 17));
-        label->setFrameShape(QFrame::NoFrame);
-        label->setWordWrap(false);
-        label_2 = new QLabel(Finalinterface);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(590, 40, 91, 17));
-        label_2->setScaledContents(false);
-        label_2->setWordWrap(false);
-        directoryview = new QTreeView(Finalinterface);
+        Finalinterface->resize(1049, 536);
+        centralWidget = new QWidget(Finalinterface);
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setGeometry(QRect(-10, -10, 906, 461));
+        mkdir = new QPushButton(centralWidget);
+        mkdir->setObjectName(QStringLiteral("mkdir"));
+        mkdir->setGeometry(QRect(40, 70, 99, 27));
+        removedir = new QPushButton(centralWidget);
+        removedir->setObjectName(QStringLiteral("removedir"));
+        removedir->setGeometry(QRect(40, 110, 99, 27));
+        directoryview = new QTreeView(centralWidget);
         directoryview->setObjectName(QStringLiteral("directoryview"));
-        directoryview->setGeometry(QRect(10, 80, 256, 301));
-        layoutWidget = new QWidget(Finalinterface);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(300, 470, 471, 29));
-        horizontalLayout = new QHBoxLayout(layoutWidget);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        addfile = new QPushButton(layoutWidget);
+        directoryview->setGeometry(QRect(50, 190, 271, 241));
+        addfile = new QPushButton(centralWidget);
         addfile->setObjectName(QStringLiteral("addfile"));
-
-        horizontalLayout->addWidget(addfile);
-
-        Deletefile = new QPushButton(layoutWidget);
-        Deletefile->setObjectName(QStringLiteral("Deletefile"));
-
-        horizontalLayout->addWidget(Deletefile);
-
-        Sync = new QPushButton(layoutWidget);
-        Sync->setObjectName(QStringLiteral("Sync"));
-
-        horizontalLayout->addWidget(Sync);
-
-        DeleteAccount = new QPushButton(Finalinterface);
-        DeleteAccount->setObjectName(QStringLiteral("DeleteAccount"));
-        DeleteAccount->setGeometry(QRect(60, 420, 121, 27));
-        layoutWidget1 = new QWidget(Finalinterface);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(10, 470, 264, 29));
-        horizontalLayout_2 = new QHBoxLayout(layoutWidget1);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        pushButton = new QPushButton(layoutWidget1);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-
-        horizontalLayout_2->addWidget(pushButton);
-
-        pushButton_2 = new QPushButton(layoutWidget1);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-
-        horizontalLayout_2->addWidget(pushButton_2);
-
+        addfile->setGeometry(QRect(170, 30, 99, 27));
+        deletefile = new QPushButton(centralWidget);
+        deletefile->setObjectName(QStringLiteral("deletefile"));
+        deletefile->setGeometry(QRect(170, 70, 99, 27));
+        openfile = new QPushButton(centralWidget);
+        openfile->setObjectName(QStringLiteral("openfile"));
+        openfile->setGeometry(QRect(40, 30, 99, 27));
+        Share = new QPushButton(centralWidget);
+        Share->setObjectName(QStringLiteral("Share"));
+        Share->setGeometry(QRect(170, 110, 99, 27));
+        Rename = new QPushButton(centralWidget);
+        Rename->setObjectName(QStringLiteral("Rename"));
+        Rename->setGeometry(QRect(330, 30, 99, 27));
+        RenameDir = new QPushButton(centralWidget);
+        RenameDir->setObjectName(QStringLiteral("RenameDir"));
+        RenameDir->setGeometry(QRect(330, 70, 99, 27));
+        syncall = new QPushButton(centralWidget);
+        syncall->setObjectName(QStringLiteral("syncall"));
+        syncall->setGeometry(QRect(510, 30, 99, 27));
+        syncselected = new QPushButton(centralWidget);
+        syncselected->setObjectName(QStringLiteral("syncselected"));
+        syncselected->setGeometry(QRect(510, 70, 99, 27));
+        Logout = new QPushButton(centralWidget);
+        Logout->setObjectName(QStringLiteral("Logout"));
+        Logout->setGeometry(QRect(340, 110, 99, 27));
+        progressBar = new QProgressBar(centralWidget);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setGeometry(QRect(500, 120, 118, 23));
+        progressBar->setValue(24);
+        filesystemview = new QTreeView(centralWidget);
+        filesystemview->setObjectName(QStringLiteral("filesystemview"));
+        filesystemview->setGeometry(QRect(330, 190, 256, 241));
+        serverlist = new QListWidget(centralWidget);
+        serverlist->setObjectName(QStringLiteral("serverlist"));
+        serverlist->setGeometry(QRect(610, 190, 256, 192));
+        menuBar = new QMenuBar(Finalinterface);
+        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1049, 25));
+        mainToolBar = new QToolBar(Finalinterface);
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        mainToolBar->setGeometry(QRect(0, 0, 4, 13));
+        statusBar = new QStatusBar(Finalinterface);
+        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setGeometry(QRect(0, 0, 3, 22));
 
         retranslateUi(Finalinterface);
 
@@ -121,15 +120,18 @@ public:
 
     void retranslateUi(QDialog *Finalinterface)
     {
-        Finalinterface->setWindowTitle(QApplication::translate("Finalinterface", "Dialog", 0));
-        label->setText(QApplication::translate("Finalinterface", "System Files", 0));
-        label_2->setText(QApplication::translate("Finalinterface", "Server Files", 0));
+        Finalinterface->setWindowTitle(QApplication::translate("Finalinterface", "MainWindow", 0));
+        mkdir->setText(QApplication::translate("Finalinterface", "mkdir", 0));
+        removedir->setText(QApplication::translate("Finalinterface", "rmvdir", 0));
         addfile->setText(QApplication::translate("Finalinterface", "Add file", 0));
-        Deletefile->setText(QApplication::translate("Finalinterface", "Delete file", 0));
-        Sync->setText(QApplication::translate("Finalinterface", "Sync", 0));
-        DeleteAccount->setText(QApplication::translate("Finalinterface", "Delete Account", 0));
-        pushButton->setText(QApplication::translate("Finalinterface", "Add Directory", 0));
-        pushButton_2->setText(QApplication::translate("Finalinterface", "Remove Directory", 0));
+        deletefile->setText(QApplication::translate("Finalinterface", "Delete file", 0));
+        openfile->setText(QApplication::translate("Finalinterface", "Open file", 0));
+        Share->setText(QApplication::translate("Finalinterface", "Share", 0));
+        Rename->setText(QApplication::translate("Finalinterface", "Rename file", 0));
+        RenameDir->setText(QApplication::translate("Finalinterface", "Rename Dir", 0));
+        syncall->setText(QApplication::translate("Finalinterface", "Sync All", 0));
+        syncselected->setText(QApplication::translate("Finalinterface", "Sync selected", 0));
+        Logout->setText(QApplication::translate("Finalinterface", "Logout", 0));
     } // retranslateUi
 
 };
