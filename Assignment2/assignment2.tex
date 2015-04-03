@@ -14,8 +14,8 @@
 	tabsize=1, % tab space width
 	showstringspaces=false, % don't mark spaces in strings
 	numbers=left, % display line numbers on the left
-	commentstyle=\color{green}, % comment color
-	keywordstyle=\color{cyan}, % keyword color
+	commentstyle=\color{blue}, % comment color
+	keywordstyle=\color{red}, % keyword color
 	stringstyle=\color{} % string color
 }
 
@@ -27,7 +27,7 @@
 		Ronak Khandelwal(2013CS50295)
 	}
 
-	\date{\today}
+	\date{February, 2015}
 	\maketitle
 
 	\tableofcontents
@@ -48,7 +48,7 @@
 
 	\section{Details of the Sub Components}
 		\subsection{User Interface}
-		We will use QT Creator for designing the ``client'' Graphic User Interface. We will have multiple pages in the user interface which will open according to the options chosen by the user on the current page. These windows are as follows:
+		We will use QT Creator for designing the client Graphic User Interface. We will have multiple pages in the user interface which will open according to the options chosen by the user on the current page. These windows are as follows:
 			\begin{itemize}
 				\item First page will ask the user whether he is a new user or an existing one and the user will have to sign up if he is a new user or  will sign in to move to the login page
 				\item Second page is the login page. In this user will have to enter the user name and password for authentication and if both matches with the information given by the user at the time of sign-up, then he will be able to login into his account
@@ -156,7 +156,7 @@
 			\subsubsection{Minimizing Data Usage}
 				\begin{itemize}
 					\item If the two files have exactly same content, then we will store only one of the files irrespective of whether they are uploaded by different users or the same user
-					\item We will compare the files bit by bit and then if every bit of one file matches with the corresponding bit of the other file, then the files are exactly same. In this case, we will upload only one of two files. This will minimize the data usage.
+					\item We will first compare file size, then the extension, and then compare the files bit by bit and then if every bit of one file matches with the corresponding bit of the other file, then the files are exactly same. In this case, we will upload only one of two files. This will minimize the data usage.
 				\end{itemize}
 			\subsubsection{Handling Changes in the files}
 				\begin{itemize}

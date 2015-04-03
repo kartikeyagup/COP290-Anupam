@@ -1,0 +1,83 @@
+CXX=g++
+CXX+=-std=c++11 -Wall
+ARG=-g
+Debug=-DDEBUG
+CFLAGS= -w
+LDFLAGS= -lpthread -lGL -lGLU -lglut
+OBJ=Objects/
+EXC=Executables/
+Sources = Sources/
+LATEX=Latex/
+DOC=Documents/
+DO=doxyg/
+DO1=doxyg1/
+
+all: $(EXC)maingame
+DEBUG: $(EXC)maingamedebug
+coutdebug: $(EXC)maingamecoutdebug
+
+mainrun: $(EXC)maingame
+	cd $(EXC); ./maingame
+
+mainrundebug: $(EXC)maingamedebug
+	cd $(EXC); gdb ./maingamedebug
+
+mainruncoutdebug: $(EXC)maingamecoutdebug
+	cd $(EXC); ./maingamecoutdebug
+
+$(EXC)maingame: $(OBJ)Graphicsrendering.o $(OBJ)Creatingobjects.o $(Sources)Vector.o $(Sources)Tank.o $(Sources)PowerUps.o $(Sources)Bullet.o $(Sources)Walls.o $(Sources)Board.o
+	$(CXX) $(CFLAGS) -o maingame $(OBJ)Graphicsrendering.o $(OBJ)Creatingobjects.o $(Sources)Vector.o $(Sources)Tank.o $(Sources)PowerUps.o $(Sources)Bullet.o $(Sources)Walls.o $(Sources)Board.o $(LDFLAGS)
+	mv maingame $(EXC)maingame
+
+$(EXC)maingamedebug: $(OBJ)Graphicsrenderingdebug.o
+	$(CXX) $(ARG) $(CFLAGS) -o maingamedebug $(OBJ)Graphicsrenderingdebug.o $(LDFLAGS)
+	mv maingamedebug $(EXC)maingamedebug
+
+$(EXC)maingamecoutdebug: $(OBJ)Graphicsrenderingcoutdebug.o
+	$(CXX) $(Debug) $(CFLAGS) -o maingamecoutdebug $(OBJ)Graphicsrenderingcoutdebug.o $(LDFLAGS)
+	mv maingamecoutdebug $(EXC)maingamecoutdebug
+
+$(OBJ)Creatingobjects.o: $(Sources)Creatingobjects.cpp
+	$(CXX) $(CFLAGS) $(LDFLAGS) -c $(Sources)Creatingobjects.cpp
+	mv Creatingobjects.o $(OBJ)Creatingobjects.o
+
+$(OBJ)Graphicsrendering.o: $(Sources)Graphicsrendering.cpp
+	$(CXX) $(CFLAGS) $(LDFLAGS)  -c $(Sources)Graphicsrendering.cpp
+	mv Graphicsrendering.o $(OBJ)Graphicsrendering.o
+
+$(OBJ)texturemapping.o: $(Sources)texturemapping.cpp
+	$(CXX) $(CFLAGS) $(LDFLAGS) -C $(Sources)texturemapping.cpp
+	mv texturemapping.o $(OBJ)texturemapping.o
+
+
+Vector.o : $(Sources)Vector.cpp 
+	g++ -c $(Sources)Vector.cpp
+
+Tank.o : $(Sources)Tank.cpp
+	g++ -c $(Sources)Tank.cpp
+
+Bullet.o :  $(Sources)Bullet.cpp
+	g++ -c $(Sources)Bullet.cpp
+
+Walls.o :  $(Sources)Walls.cpp
+	g++  -c $(Sources)Walls.cpp
+
+Board.o : $(Sources)Board.cpp
+	g++ -c $(Sources)Board.cpp
+
+PowerUps.o : $(Sources)PowerUps.cpp
+	g++ -c $(Sources)PowerUps.cpp
+
+TestTank.o : TestTank.cpp
+	g++ -c TestTank.cpp
+
+
+$(OBJ)Graphicsrenderingdebug.o: $(Sources)Graphicsrendering.cpp
+	$(CXX) $(ARG) $(CFLAGS) $(LDFLAGS)  -c $(Sources)Graphicsrendering.cpp
+	mv Graphicsrendering.o $(OBJ)Graphicsrenderingdebug.o
+
+$(OBJ)Graphicsrenderingcoutdebug.o: $(Sources)Graphicsrendering.cpp
+	$(CXX) $(Debug) $(CFLAGS) $(LDFLAGS)  -c $(Sources)Graphicsrendering.cpp
+	mv Graphicsrendering.o $(OBJ)Graphicsrenderingcoutdebug.o
+
+
