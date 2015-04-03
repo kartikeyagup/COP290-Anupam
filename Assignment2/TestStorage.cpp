@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <stdlib.h>
 #include <cstdio>
-#include "Storage.h"
+#include "ServerStorage.h"
 #include <fstream>
 
 using namespace std;
@@ -35,7 +35,7 @@ int main()
 	cout<<(store->getu())["anupam"].at(0).serverparts[2]<<endl;
 	store->deletefile("/anupam/a.cpp","anupam");
 	cout<<(store->getu())["anupam"].size()<<endl;
-	store->sharefile("/ronak/b.cpp", "ronak", "anupam", 1);
+//	store->sharefile("/ronak/b.cpp", "ronak", "anupam", 1);
 	cout<<(store->getu())["anupam"].at(0).clientname<<endl;
 	cout<<(store->getu())["anupam"].at(0).serverparts[0]<<endl;
 	cout<<(store->getu())["anupam"].at(0).serverparts[1]<<endl;
@@ -54,5 +54,5 @@ int main()
 
 	vector<string> v;
 	v.push_back("/ronak/b.cpp");
-	store->downloadfiles(v, "ronak");
+	//store->downloadfiles(v, "ronak");
 }

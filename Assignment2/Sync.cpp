@@ -2,6 +2,7 @@
 
 
 #include "Sync.h"
+#include "Storage.h"
 using namespace std;
 
 Sync::Sync()
@@ -41,22 +42,49 @@ vector<filechars> Sync::geto()
 
 
 /* Rules:
-
-	0 	->	no change.
-	1	->	server file to be deleted.
-	2	->	client file to be added in server.
+	1	->	server file to be added in client.
+	2	->	client file to be deleted.
 	3	->	client file to be updated.
 	4	->	server file to be updated.
 	5	->	share file of one user in another.
 	6	->	sync files with server.
 */
-void Sync::getaction(Storage* a)
+void Sync::getaction(Storage* a, string us , const char* restfiles, int synctime )
 {
+	//
+	//actions need to be defined for all the files that are not in addfile.txt or deletefiles.txt.
+	//str1 for filename and str2  for modified time.
+	string str1,str2,str3 = "";
+	vector<filewtime> filelist;
+	for(int i=0;i<sizeof(restfiles);i++)
+	{
+		while(restfiles[i]!='\n')
+		{
+			while(restfiles[i]!=' ')
+			{
+				str1+=restfiles[i];
+				i++;
+			}
+			while(restfiles[i]!=' ')
+			{
+				str3+=restfiles[i];
+				i++;
+			}
+			str2+=restfiles[i];
+		}
+		//
+		filewtime newfile;
+		newfile.filename = str1;
+		newfile.filesize = stoi(str2);
+		newfile.filesize = stoi(str3);
+		filelist.push_back(newfile);
+	}
 	//for those who are in server but not in new list of files that the client wants to sync.
-	bool updated[oldfilelist.size()];
-	fill_n(updated, oldfilelist.size() , 0);
+	bool servupdated[oldfilelist.size()];
+
+	fill_n(servupdated, oldfilelist.size() , 0);
 	filewactions newfile;
-	vector<filewactions> actionlist;
+	vector<filewactions> actionslist;
 	cout<<"loopstart"<<endl;
 	//loop for checking that for all files in client list what files are to updated an how.
 	for(int i=0;i<filelist.size();i++)
@@ -68,7 +96,7 @@ void Sync::getaction(Storage* a)
 				//filename of output file becomes file name of the file in the client side of list.
 				newfile.filename = filelist[i].filename;
 				//if client file is more latest.
-				if(filelist[i].filemodtime > oldfilelist[j].filemodtime )
+				if(filelist[i].filetime > a->getst()[us] )
 				{
 					newfile.action = 4;
 				}
@@ -77,16 +105,16 @@ void Sync::getaction(Storage* a)
 				{
 					newfile.action = 3;
 				}
-				updated[j] = 1;
-				actionlist.push_back(newfile);
+				servupdated[j] = 1;
+				actionslist.push_back(newfile);
 				goto f;
-
 			}
 			// if a file needed to be added to the server side.
 		}
 		newfile.filename = filelist[i].filename;
+		newfile.filesize= filelist[i].filesize;
 		newfile.action = 2;
-		actionlist.push_back(newfile);
+		actionslist.push_back(newfile);
  		f : ; //reaches here if newfile is already made
 	}
 	cout<<"loopend"<<endl;
@@ -94,35 +122,33 @@ void Sync::getaction(Storage* a)
 	for(int i=0;i<oldfilelist.size();i++)
 	{
 		// for all files in server side that have to be deleted ( as they are not present in the client side)
-		if(updated[i]==0)
+		if(servupdated[i]==0)
 		{
-			a->deletefile(oldfilelist[i], username);
+			filewactions newf;
+			newf.filename = oldfilelist[i].filename;
+			//newf.filesize = oldfilelist[i].filesize;
+			newf.action = 1;
+			actionslist.push_back(newf);
 			// TODO : Delete file from server which are present on server 
 			//THIS CAN BE DONE IF I KEEP A VARIABLE OF CLASS STORAGE IN PRIVATE OF THIS CLASS and call the deletefile function . 
 
 		}
 	}
-	for(int i=0;i<actionlist.size();i++)
+	for(int i=0;i<actionslist.size();i++)
 	{
-		cout<<actionlist[i].action<<" ";
-		cout<<actionlist[i].filename<<"\n";
+		cout<<actionslist[i].action<<" ";
+		cout<<actionslist[i].filename<<"\n";
 	}
-	ofstream actionslist;
-	actionslist.open("/home/anupam/Desktop/actions.txt");
-	for(int i=0;i<actionlist.size();i++)
+	ofstream actionlist;
+	actionlist.open("/home/anupam/Desktop/actions.txt");
+	for(int i=0;i<actionslist.size();i++)
 	{
-		actionslist<<actionlist[i].action<<" ";
-		actionslist<<actionlist[i].filename<<"\n";
+		actionlist<<actionslist[i].action<<" ";
+		actionlist<<actionslist[i].filename<<"\n";
 	}
 	cout<<"loopend"<<endl;
-	actionslist.close();
-
-}
-
-
-
-void deletefiles(vector<string> delfilelist ,  )
-{
+	actionlist.close();
+	a->getst()[us] = synctime;
 
 }
 
@@ -130,10 +156,7 @@ void deletefiles(vector<string> delfilelist ,  )
 
 
 
-void downloadfiles(vector<string> todown)
-{
-	for(int i=0;i<)
-} 
+ 
 
 
 vector<string> diffplaces(string filename1, string filename2)

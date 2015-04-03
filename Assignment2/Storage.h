@@ -10,7 +10,16 @@ struct filewactions
 {
 	string filename ;
 	int action;
+	int filesize;
 };
+
+struct filewtime
+{
+	string filename;
+	int filesize;
+	int filetime;
+};
+
 
 struct user
 {
@@ -28,6 +37,13 @@ struct filenames
 	int timeinserver;
 };
 
+struct sharedfiles
+{
+	string filename;
+	vector<string> commonusers;
+	vector<string> serverparts;
+};
+
 class Storage
 {
 	private:
@@ -38,14 +54,21 @@ class Storage
 		//list of files which are online only	
 		unordered_map<string , vector<filenames> > useronlineonly;
 		//for name of files in server
+
+		unordered_map<string, int> servertime;
 		int nextnum;		
 		//list of files shared with a user
-
+		unordered_map<string , vector<sharedfiles> > sharedfiles;
 		//for checking if a file exists in the user's folder
+		unordered_map<string , int> nextnumforuser;
 		bool ifilexists(string fileinuser);
 	public:
 		//constructor
 		Storage();
+		//set the server time.
+		void setst(unordered_map<string,int>);
+		//get the server time.
+		unordered_map<string,int> getst();
 		//set the list of all files
 		void setaf(unordered_map<string,int>);
 		//get all files list
@@ -69,7 +92,7 @@ class Storage
 		void renamefile(string prevfilename , string newfilename, string us);
 		void adduser(string us);
 		void addfile(string filename ,vector<string> fileparts ,  string us);
-		void deletefile(string file, string us);
+		vector<string> deletefile(string file, string us);
 		void delclientonly(string file, string us);
 		void deleteuser(string us);			
 };

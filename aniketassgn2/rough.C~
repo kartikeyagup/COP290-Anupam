@@ -1,0 +1,28 @@
+#include<stdio.h>
+#include<dirent.h>
+#define DIR_path "home/btech/cs1130212/aniket/aniket"      
+main()
+ {
+   DIR *dir;
+   dir=opendir(DIR_PATH);
+   printf("THe files inside the directory :: \n");
+
+  struct dirent *dent;
+  if(dir!=NULL)
+   {
+
+       while((dent=readdir(dir))!= NULL)
+         {
+          	  struct stat st;
+		lstat(dent->d_name, &st);	
+		if(S_ISDIR(st.st_mode))
+  		 printf("\t DIRECTORY\n");
+		else
+   		 printf("\t FILE\n");
+        }
+           close(dir);
+    }
+    else
+            printf("ERROR OPENIN DIRECTORY");
+
+}

@@ -1,6 +1,7 @@
 #ifndef SYNC_H
 #define SYNC_H
 #include <bits/stdc++.h>
+#include "Storage.h"
 
 
 
@@ -16,12 +17,6 @@ struct filechars
 
 
 //file with output actions
-struct filewactions
-{
-	string filename ;
-	int action;
-};
-
 class Sync
 {
 	private:
@@ -30,7 +25,7 @@ class Sync
 		vector<filechars> filelist;
 		//list of old files of users
 		vector<filechars> oldfilelist;
-		//gets the user to work upon
+		//list of files to be deletedp
 
 	public:
 		Sync();
@@ -42,7 +37,8 @@ class Sync
 		void seto(vector<filechars>);
 		vector<filechars> geto();
 		//get the action as per which the file has to act
-		void getaction();
+		void getaction(Storage* a, string us , const char* restfiles, int synctime );
+
 		//ouputs the blocks of difference ( for minimal data usage )
 		vector<string> diffplaces(string filename1, string filename2);
 };

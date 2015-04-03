@@ -73,6 +73,17 @@ unordered_map<string,int> Storage::getaf()
 	return allfiles;
 }
 
+void Storage::setst(unordered_map<string,int> st)
+{
+	servertime = st;
+}
+
+unordered_map<string,int> Storage::getst()
+{
+	return servertime;
+}
+
+
 void Storage::setu(unordered_map<string , vector<filenames> > utfl)
 {
 	usertofilelist = utfl;
@@ -161,8 +172,9 @@ void Storage::addfile(string filename , vector<string> fileparts  , string us )
 	usertofilelist[us].push_back(newfile);
 }
 
-void Storage::deletefile(string file, string us)
+vector<string> Storage::deletefile(string file, string us)
 {
+	vector<string> delparts;
 	cout<<"Deleting file : "<<file <<" from user : "<<us <<endl;
 	for(int j=0;j<usertofilelist[us].size();j++)
 	{
@@ -176,13 +188,36 @@ void Storage::deletefile(string file, string us)
 				if(allfiles[usertofilelist[us].at(j).serverparts[i]] == 0)
 				{
 					allfiles.erase(usertofilelist[us].at(j).serverparts[i]);
+					delparts.push_back(usertofilelist[us].at(j).serverparts[i]);
 					// write code for erase from directory .REMEMBER !!!!!!!!!!!!
 				}
 			}
 			//delete file from user to file list
 			usertofilelist[us].erase(usertofilelist[us].begin() + j);
+			//goto g ;
 		}
 	}
+
+	/*for(int j=0;j<sharedfiles[us].size();j++)
+	{
+		if(sharedfiles[us].at(j).filename == file)
+		{
+			for(int i=0;i<sharedfiles[us].at(j).serverparts.size();i++)
+			{
+				//decrease in number of users by 1
+				allfiles[sharedfiles[us].at(j).serverparts[i]] -= 1;
+				//if no user exists , then delete file
+				if(allfiles[sharedfiles[us].at(j).serverparts[i]] == 0)
+				{
+					allfiles.erase(sharedfiles[us].at(j).serverparts[i]);
+					// write code for erase from directory .REMEMBER !!!!!!!!!!!!
+				}
+			}
+			//delete file from user to file list
+			for(int j=0;j<)
+			goto g ;
+	}*/
+
 }
 
 
@@ -274,29 +309,38 @@ void Storage::deleteuser(string us)
 
 
 
-void Storage::sharefile(string file , string us1 , string us2 , bool writeable)
+/*void Storage::sharefile(string file , string us1 , string us2 , bool writeable)
 {
 	for(int i=0;i<usertofilelist[us1].size();i++)
 	{
 
 		//find the server parts of the file and add them to second user.
+		//if permission is set as allowed towrite .
 		if(usertofilelist[us1].at(i).clientname == file && writeable == 1)
 		{
 			//REMEMBER to change file(clientname) name as user has changed !!!!!!
 			filenames temp = usertofilelist[us1].at(i);
 			temp.clientname = resultfilename(temp.clientname, us1 , us2);
 
+			sharedfiles[us2].filename== temp.clientname ;
+			if(sharedfiles[us2].commonusers(
+		}
+		//if permission is user read only
+		else if(usertofilelist[us1].at(i).clientname == file && writeable == 0)
+		{
+			// if only reading permisiion , treat it as addfile in us2.
+			filenames temp = usertofilelist[us1].at(i);
+			temp.clientname = resultfilename(temp.clientname, us1 , us2);
 			usertofilelist[us2].push_back(temp) ;
-			//add readable property here
 		}
 	}
 	cout<<file<<" shared by : "<<us1<<" in folder of : "<<us2<<endl; 
-}
+}*/
 
 
 void Storage::renamefile(string prevfilename , string newfilename, string us)
 {
-	cout<<"file renamed from : "<<prevfilename<<" to "<<newfilename<<endl;
+	
 	for(int i=0;i<usertofilelist[us].size();i++)
 	{
 		if(usertofilelist[us].at(i).clientname == prevfilename )
@@ -304,6 +348,7 @@ void Storage::renamefile(string prevfilename , string newfilename, string us)
 			usertofilelist[us].at(i).clientname = newfilename;
 		}
 	}
+	cout<<"file renamed from : "<<prevfilename<<" to "<<newfilename<<endl;
 }
 
 

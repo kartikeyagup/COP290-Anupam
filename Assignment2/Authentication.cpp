@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 #include <fstream>
+<<<<<<< HEAD
 #include "Authentication1.h"
+=======
+#include "Authentication.h"
+>>>>>>> dd7f24bb947608972fe727292d986612f76bcda9
 using namespace std;
 
 

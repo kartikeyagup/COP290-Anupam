@@ -7,6 +7,8 @@ using namespace std;
 
 struct user
 {
+	string Name;
+	string username;
 	string password;
 	string Question;
 	string answer;
@@ -29,5 +31,10 @@ class Authentication
 		void isAuthenticated(char* usandpass);
 		void sec(char* a);
 		void verify(char* a);
+		void adduser();
+		void deluser();
+		void isAuthenticated(string us , string pass);
+		void sec();
+		void verify();
 };
 #endif

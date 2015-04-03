@@ -33,5 +33,5 @@ int main()
 	file1.push_back(f);
 	file1.push_back(g);
 	a->seto(file1);
-	a->getaction();
+	//a->getaction();
 }
