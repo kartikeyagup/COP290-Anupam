@@ -7,6 +7,22 @@
 #include "Bullet.h"
 #include "PowerUps.h"
 
+
+
+bool findShoot(string s)
+{
+	if(s.size()<5) return false;
+	else
+	{
+		int less = s.size()-4;
+		string n =  s.substr(less,5);
+		if(n=="Shoot")
+		{
+			return true;
+		}
+	}
+}
+
 Board::Board()
 {
 
@@ -82,7 +98,7 @@ string Board::getPlayerID()
 	return PlayerID;
 }
 
-Board Board::GiveChanges(Vector tankchange,Vector bullchange)
+Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<string,string> > bulinstr )
 {
 	 Board a ;
 
@@ -101,10 +117,29 @@ Board Board::GiveChanges(Vector tankchange,Vector bullchange)
 			}
 			if((!colwithwalls) && (!colwithtanks) && (!colwithbullets))
 			{
-				Tanks[i].Move("up",tankchange);
-				vector<Tank> t = a.getTanks();
-				t.push_back(Tanks[i]); 
-				a.setTanks(t);
+				int k=0;
+				while(k<tankinstr.size())
+				{
+					if(tankinstr[k].first == Tanks[i].getTankID())
+					{
+						Tanks[i].Move(tankinstr[k].second);
+						if(findShoot(tankinstr[k].second))
+						{
+							Bullet bull;
+							bull.setDirection(Tanks[i].getDirection());
+							bull.setUserID(Tanks[i].getUserID());
+							//vector<Bullet> 
+
+							vector<Bullet> b = a.getBullets();
+							b.push_back(bull); 
+							a.setBullets(b);
+						}
+						vector<Tank> t = a.getTanks();
+						t.push_back(Tanks[i]); 
+						a.setTanks(t);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -118,10 +153,25 @@ Board Board::GiveChanges(Vector tankchange,Vector bullchange)
 			bool colwithbullets = Bullets[i].CollideWithBullet(Bullets);
 			if((!colwithwalls) && (!colwithtanks) && (!colwithbullets))
 			{
-				Bullets[i].Move("up",bullchange);
-				vector<Bullet> t = a.getBullets();
-				t.push_back(Bullets[i]); 
-				a.setBullets(t);
+				int k=0;
+				while(k<bulinstr.size())
+				{
+					if(bulinstr[k].first == Bullets[i].getBulletID())
+					{
+						Bullets[i].Move(bulinstr[k].second);
+						vector<Bullet> t = a.getBullets();
+						t.push_back(Bullets[i]); 
+						a.setBullets(t);
+						break;
+					}
+				}
+				if(k==bulinstr.size())
+				{
+					Bullets[i].Move(Bullets[i].getDirection());
+					vector<Bullet> t = a.getBullets();
+					t.push_back(Bullets[i]); 
+					a.setBullets(t);
+				}
 			}
 			else
 			{

@@ -87,8 +87,31 @@ string Bullet::getDirection()
 	return Direction;
 }
 
-void Bullet::Move(string dire , Vector change)
+void Bullet::Move(string dire)
 {
+	Vector change;
+	change.setX(0);
+	change.setY(0);
+	change.setZ(0);
+
+	if(dire=="up")
+	{
+		change.setY(20);
+	}
+	else if(dire == "down")
+	{
+		change.setY(-20);
+	}
+	else if(dire=="left")
+	{
+		change.setX(-20);
+	}
+
+	else if(dire== "right")
+	{
+		change.setZ(20);
+	}
+
 	if(Direction == dire)
 	{
 		Position = Position.AddVector(change);
@@ -114,6 +137,16 @@ bool Bullet::CollideWithTanks(vector<Tank>& tanks)
 
 bool Bullet::CollideWithWalls(vector<Walls>& w)
 {
+
+	for(int i=0;i<w.size();i++)
+	{
+		if(Position.SubVector(w[i].getPosition()).Mod()<1)
+		{
+			DeathStatus = true;
+			return true;
+		}
+	}
+	return false;
 	/*TODO : modify the maths part . Area A divided into m*n square for walls
 			for a position (x,y), it lies inside the square number (x mod n , y mod m)
 	*/
@@ -162,7 +195,6 @@ bool Bullet::CollideWithWalls(vector<Walls>& w)
 	}	
 	
 	else return false;*/
-	return false;
 }
 
 bool Bullet::CollideWithBullet(vector<Bullet>& bullets)

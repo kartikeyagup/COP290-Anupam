@@ -47,7 +47,7 @@ class Board
 		Vector getColour();
 		vector<Vector> getVertices();
 
-		Board GiveChanges(Vector , Vector);				//Tells the changes to be made in the board.
+		Board GiveChanges(vector< pair<string,string> > , vector< pair<string,string> >);				//Tells the changes to be made in the board.
 		void UpdateBoard(Board change);		//Update the board with the change provided. 	
 };
 #endif

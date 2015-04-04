@@ -7,7 +7,7 @@ Vector.o : Vector.cpp
 	g++ -c Vector.cpp
 
 Tank.o : Tank.cpp
-	g++ -c Tank.cpp
+	g++ -c -std=c++11 Tank.cpp
 
 Bullet.o :  Bullet.cpp
 	g++ -c Bullet.cpp

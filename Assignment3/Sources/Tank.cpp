@@ -9,7 +9,6 @@
 
 
 using namespace std;
-extern string keypressed;
 
 Tank::Tank()
 {
@@ -18,6 +17,7 @@ Tank::Tank()
     mytankcentre.setY(0);
     mytankcentre.setZ(0);
     CentrePosition = mytankcentre;
+    DeathStatus = false;
 }
 
 void Tank::setCentre(Vector pos)
@@ -102,28 +102,27 @@ string Tank::getDirection()
 
 void Tank::Move(string dire)
 {
+	Vector change;
+	change.setX(0);
+	change.setY(0);
+	change.setZ(0);
+	if(dire == "left")
+	{
+		change.setX(-10);
+	}
+	else if(dire == "right")
+	{
+		change.setX(10);
+	}
+	else if (dire == "up")
+	{
+		change.setY(10);
+	}
+	else if(dire == "down")
+	{
+		change.setY(-10);
+	}
 
-	change.setX(0.0);
-	change.setY(0.0);
-	change.setZ(0.0);
-	if(keypressed == "left")
-	{
-		change.setX(-10.0)
-	}
-	else if(keypressed == "right")
-	{
-		change.setX(10.0);
-	}
-	else if (keypressed == "up")
-	{
-		change.setY(10.0);
-	}
-	else if(keypressed == "down")
-	{
-		change.setY(-10.0);
-	}
-
-	dire = keypressed;
 	
 	if(Direction == dire)
 	{
@@ -176,7 +175,14 @@ bool Tank::CollideWithWalls(vector<Walls>& w)
 		else if(BrickFilled[(CentrePosition.getX()-1)*Position.getY()]!=0) return true;
 		else return false;
 	}*/
-		return false;
+	for(int i=0;i<w.size();i++)
+	{
+		if(CentrePosition.SubVector(w[i].getPosition()).Mod()<1)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Tank::CollideWithTank(vector<Tank>& tanks)
@@ -196,7 +202,7 @@ bool Tank::CollideWithBullet(vector<Bullet>& bullets)
 {
 	for(int i=0;i<bullets.size();i++)
 	{
-		if((CentrePosition.SubVector(bullets[i].getPosition()).Mod()< 100) && (PowUp.getType() != "immune") && (UserID != bullets[i].getUserID()))
+		if((CentrePosition.SubVector(bullets[i].getPosition()).Mod()< 1) && (PowUp.getType() != "immune") && (UserID != bullets[i].getUserID()))
 		{
 			//bullet is not destroyed here as it does not belong to the user 1 It will be destroyed by its owner in same cycle.
 			DeathStatus = true; 

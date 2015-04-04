@@ -54,7 +54,7 @@ bool Walls::getDeathStatus()
 	return DeathStatus;
 }
 
-bool Walls::CollideWithBullets(vector<Bullet> bullets)
+bool Walls::CollideWithBullets(vector<Bullet>& bullets)
 {
 	for(int i=0;i<bullets.size();i++)
 	{

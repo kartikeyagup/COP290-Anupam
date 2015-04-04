@@ -12,7 +12,7 @@ class TestTank
 	public :
 		bool TestMove(Tank a);
 		bool TestCollideWithTank(Tank a, Tank b);
-		/*bool TestCollideWithBullet(Tank a , Bullet b);*/
+		bool TestCollideWithBullet(Tank a , Bullet b);
 		bool TestShoot(Tank a);
 		//bool TestTakePowerUp(Tank a);
 };

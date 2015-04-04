@@ -1,0 +1,5 @@
+TODO things :
+
+1 . Tell Ronak that a user cant keep a shared file online only . Update QT
+2 . File sharing backend totally complete.
+3 . Cant rename a shared file . Do in Qt.

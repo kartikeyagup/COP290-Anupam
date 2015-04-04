@@ -47,7 +47,7 @@ class Tank
 		PowerUp getPowerUp();
 		string getDirection();
 
-		void Move(string direction,Vector change);					//Required to move tank.
+		void Move(string direction);					//Required to move tank.
 		void Shoot(vector<Bullet>&);								//Shoot  bullet.
 		void ApplyPower(PowerUp pow);					//Applies power up.
 		bool CollideWithWalls(vector<Walls>&);			//Check if collides with wall.

@@ -41,7 +41,7 @@ class Bullet
 		string getDirection();
 		bool getDeathStatus();
 
-		void Move(string , Vector);						//Move bullet.
+		void Move(string);						//Move bullet.
 
 		bool CollideWithTanks(vector<Tank>& tanks);      //Collision with tank
 //		bool CollideWithTanks(Tank tank);	//Check if Bullet collides with tank. 
