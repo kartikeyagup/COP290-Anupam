@@ -186,21 +186,6 @@ void keySpecialUp(int key,int x,int y){
     keySpecialstates[key] = false;
 }
 
-// void keyPressed(unsigned char key, int x, int y) {
-//     keyStates[key] = true;
-// }
-
-// void keyUp(unsigned char key,int x, int y){
-//     keyStates[key] = false;
-// }
-
-
-//to be written by anupam
-// void keySpecialOperations(void){
-//     if(keySpecial[GLUT_KEY_RIGHT]) then
-
-// }
-
 //file reading
 std::vector<Face> fileread(std::string path){
 	std::vector<Face> read;
@@ -480,7 +465,7 @@ void display(void){
 
 void createscreen(int argc,char* argv[]){
 	glutInit(&argc, argv);
-	glutInitWindowSize(800,600);
+	glutInitWindowSize(1200,600);
 	int main_window=glutCreateWindow("Yo Team Creation");
 	double width = glutGet(GLUT_WINDOW_WIDTH); //Width in pixels of the current window.
 	double height = glutGet(GLUT_WINDOW_HEIGHT);
