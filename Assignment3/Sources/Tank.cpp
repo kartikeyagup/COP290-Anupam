@@ -109,21 +109,26 @@ void Tank::Move(string dire)
 	if(dire == "left")
 	{
 		change.setX(-10);
+		cout<<"Left is pressed"<<endl;
 	}
 	else if(dire == "right")
 	{
 		change.setX(10);
+		cout<<"Right is pressed"<<endl;
 	}
 	else if (dire == "up")
 	{
 		change.setY(10);
+		cout<<"Up is pressed"<<endl;
 	}
 	else if(dire == "down")
 	{
 		change.setY(-10);
+		cout<<"Down is pressed"<<endl;
+
 	}
 
-	
+	cout<<Direction<<" "<<dire<<"       Direction and dire"<<endl;
 	if(Direction == dire)
 	{
 		CentrePosition = CentrePosition.AddVector(change);
@@ -189,9 +194,13 @@ bool Tank::CollideWithTank(vector<Tank>& tanks)
 {
 	for(int i=0;i<tanks.size();i++)
 	{
+
 		cout<<(CentrePosition.SubVector(tanks[i].getCentre()).Mod())<<"     subvect"<<endl;
-		if((CentrePosition.SubVector(tanks[i].getCentre()).Mod()< 1) &&  (TankID != tanks[i].getTankID()))
+		cout<<"before Condition"<<endl;
+		if((CentrePosition.SubVector(tanks[i].getCentre()).Mod()< 51) &&  (TankID != tanks[i].getTankID()))
 		{
+			cout<<"Condition applied"<<endl;
+
 			return true;
 		}
 	}
@@ -202,8 +211,10 @@ bool Tank::CollideWithBullet(vector<Bullet>& bullets)
 {
 	for(int i=0;i<bullets.size();i++)
 	{
+		cout<<"before Condition"<<endl;
 		if((CentrePosition.SubVector(bullets[i].getPosition()).Mod()< 1) && (PowUp.getType() != "immune") && (UserID != bullets[i].getUserID()))
 		{
+			cout<<"Condition applied"<<endl;
 			//bullet is not destroyed here as it does not belong to the user 1 It will be destroyed by its owner in same cycle.
 			DeathStatus = true; 
 			return true;

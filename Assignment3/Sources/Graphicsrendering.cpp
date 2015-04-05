@@ -7,6 +7,7 @@
 #include "Graphicsrendering.h"
 #include "Creatingobjects.h"
 #include "Tank.h"
+#include "Board.h"
 
 
 
@@ -18,10 +19,12 @@ std::vector<Face> tank;
 std::vector<Face> eagle;
 std::unordered_map<std::string,Colour> tankcolour;
 std::string keypressed;             //which key is pressed by the user to move the tank
-Tank mytank;
 double rotate_x = 90;
 double rotate_y = 0;
 double rotate_z = 0;
+Board board;
+vector< pair<string,string> > tankins;
+vector< pair<string,string> > bulletins;
 // double translate_x =0;
 // double translate_y = 0;
 // double translate_z =0;
@@ -397,7 +400,15 @@ void specialKeystranslate( int key, int x, int y ) 								//using special keys 
     }
     else if (key == GLUT_KEY_DOWN){
         keypressed = "down";
-    }   	
+    }   
+    cout<<"key is pressed"<<endl;
+    cout<<keypressed<<"  Key is pressed"<<endl;
+    tankins.resize(0);
+    pair<string,string> ins= make_pair(board.getPlayerID()+"1" , keypressed);
+    tankins.push_back(ins);
+    bulletins.resize(0);
+    cout<<tankins[0].second<<" instruction sent"<<endl;
+	
     glutPostRedisplay();
  }
 
@@ -468,10 +479,26 @@ void display(void){
 	// createmissile(missile);
 	// createwall(wall);
 	// createeagle(eagle);
-    
-	createtank(tank,mytank);
+    cout<<"Problem Just before change"<<endl;
+    Board change = board.GiveChanges(tankins,bulletins);
+    cout<<"No problem after change"<<endl;
+
+    vector<Tank> tanks = board.getTanks();
+    for(int i=0;i<tanks.size();i++)
+    {
+	   createtank(tank,tanks[i]);
+    }
+
+   /* vector<Bullet> bullets = board.getBullets();
+    for(int i=0;i<bullets.size();i++)
+    {
+       createtank(bullet,bullets[i]);
+    }*/
 	// glTranslated(0,0,0);	
 
+    keypressed="";
+    tankins.resize(0);
+    bulletins.resize(0);
     glFlush();
     glutSwapBuffers();
     glutPostRedisplay();
@@ -511,6 +538,30 @@ void createscreen(int argc,char* argv[]){
 int main(int argc,char* argv[]){
 	createscreen(argc,argv);
 	
+    Tank t1;
+    Tank t2;
+    t1.setTankID(board.getPlayerID()+"1");
+     vector<Tank> t;
+    for(int i=0;i<10;i++)
+    {
+        Tank newt;
+        Vector bcent;
+        bcent.setX(0);
+        bcent.setY(100*(i+1));
+        bcent.setZ(0);
+        newt.setCentre(bcent);
+        t.push_back(newt);   
+    }
+    Vector bcent;
+    bcent.setX(0);
+    bcent.setY(100);
+    bcent.setZ(0);
+    t1.setDirection("up");
+    t2.setDirection("up");
+    t2.setCentre(bcent);
+        t.push_back(t1);
+    t.push_back(t2);
+    board.setTanks(t);
 
 	// Vect* w= new Vect(0,0,0);
 	// Vect* col = new Vect(1,1,1);
@@ -528,7 +579,7 @@ int main(int argc,char* argv[]){
 	// glutKeyboardFunc(keyPressed);
  //    glutKeyboardUpFunc(keyUp);
     glDepthFunc(GL_LESS); 
-    LoadGLTextures();              // Load The Texture(s) 
+   // LoadGLTextures();              // Load The Texture(s) 
     bullet = fileread("../trial/bullet.obj");
     missile = fileread("../trial/missile.obj");
     wall = fileread("../trial/wall.obj");

@@ -104,6 +104,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 
 	for(int i=0;i<Tanks.size();i++)
 	{
+		cout<<"Stuck at tank loop"<<endl;
 		if(Tanks[i].getUserID()== PlayerID)
 		{
 			bool colwithwalls  = Tanks[i].CollideWithWalls(Bricks);
@@ -115,7 +116,41 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 				t.push_back(Tanks[i]); 
 				a.setTanks(t);
 			}
-			if((!colwithwalls) && (!colwithtanks) && (!colwithbullets))
+
+			if(colwithwalls || colwithtanks)
+			{
+				string Direction = Tanks[i].getDirection();
+				if(Direction=="up")
+				{
+					Tanks[i].Move("down");
+					Tanks[i].Move("down");
+					cout<<Tanks[i].getDirection()<<endl;
+					//Tanks[i].Move("up");
+				}
+				else if(Direction=="down")
+				{
+					Tanks[i].Move("up");
+					Tanks[i].Move("up");
+					//Tanks[i].Move("down");
+				}
+				else if(Direction=="left")
+				{
+					Tanks[i].Move("right");
+					Tanks[i].Move("right");
+					//Tanks[i].Move("left");
+				}
+				else if(Direction=="right")
+				{
+					Tanks[i].Move("left");
+					Tanks[i].Move("left");
+					cout<<Tanks[i].getDirection()<<endl;
+					//Tanks[i].Move("right");
+				}
+				vector<Tank> t = a.getTanks();
+				t.push_back(Tanks[i]); 
+				a.setTanks(t);
+			}
+			if((!colwithwalls ) && (!colwithtanks) && (!colwithbullets))
 			{
 				int k=0;
 				while(k<tankinstr.size())
@@ -139,6 +174,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 						a.setTanks(t);
 						break;
 					}
+					k++;
 				}
 			}
 		}
@@ -146,6 +182,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 
 	for(int i=0;i<Bullets.size();i++)
 	{
+		cout<<"Stuck at bullet loop"<<endl;
 		if(Bullets[i].getUserID()== PlayerID)
 		{
 			bool colwithwalls = Bullets[i].CollideWithWalls(Bricks);
@@ -164,6 +201,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 						a.setBullets(t);
 						break;
 					}
+					k++;
 				}
 				if(k==bulinstr.size())
 				{
@@ -184,6 +222,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 
 	for(int i=0;i<Bricks.size();i++)
 	{
+		cout<<"Stuck at brick loop"<<endl;
 		if(Bricks[i].getDeathStatus()==true)
 		{
 			vector<Walls> t = a.getBricks();
@@ -194,6 +233,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 
 	for(int i=0;i<PowerUps.size();i++)
 	{
+		cout<<"Stuck at powerup loop"<<endl;
 		if(PowerUps[i].getDeathStatus()==true)
 		{
 			vector<PowerUp> t = a.getPowerUps();

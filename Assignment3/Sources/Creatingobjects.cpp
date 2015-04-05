@@ -30,11 +30,11 @@ void createface(Face newface){
 	newvertex3.x = newface.vertex3.x;
 	newvertex3.y = newface.vertex3.y;
 	newvertex3.z = newface.vertex3.z;
-	 glTexCoord2f(0.0f, 0.0f);	// Bottom Left Of The Texture and Quad
+	 //glTexCoord2f(0.0f, 0.0f);	// Bottom Left Of The Texture and Quad
     glVertex3f( newvertex1.x, newvertex1.y, newvertex1.z);              // Top
-	 glTexCoord2f(1.0f, 0.0f); 	// Bottom Right Of The Texture and Quad
+	 //glTexCoord2f(1.0f, 0.0f); 	// Bottom Right Of The Texture and Quad
     glVertex3f( newvertex2.x, newvertex2.y, newvertex2.z);              // Bottom Left
-    glTexCoord2f(1.0f, 1.0f); 	// Top Right Of The Texture and Quad
+    //glTexCoord2f(1.0f, 1.0f); 	// Top Right Of The Texture and Quad
     glVertex3f( newvertex3.x, newvertex3.y, newvertex3.z);              // Bottom Right
 	glEnd();                            // Finished Drawing The Triangle	
 }
