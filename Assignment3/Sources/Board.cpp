@@ -9,19 +9,19 @@
 
 
 
-bool findShoot(string s)
+bool find(string s1, string s2)
 {
-	if(s.size()<5) return false;
-	else
+	cout<<s1 <<" Problem  "<<s2<<endl;
+	cout<<s1.size()<<"  Sizes  "<<s2.size()<<endl;
+	int a = s1.size() - s2.size() + 1;
+	for(int i=0;i<a;i++)
 	{
-		int less = s.size()-4;
-		string n =  s.substr(less,5);
-		if(n=="Shoot")
-		{
-			return true;
-		}
+		cout<<"adnksnfjqebf"<<endl;
+		if(s1.substr(i,s2.size())==s2) return true;
 	}
+	return false;
 }
+
 
 Board::Board()
 {
@@ -157,13 +157,20 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 				{
 					if(tankinstr[k].first == Tanks[i].getTankID())
 					{
-						Tanks[i].Move(tankinstr[k].second);
-						if(findShoot(tankinstr[k].second))
+						if(!find(tankinstr[k].second, "Shoot"))
 						{
+							Tanks[i].Move(tankinstr[k].second);
+							cout<<Tanks[i].getDirection()<<" Tank Direction"<<endl;
+						}
+						else
+						{
+
 							Bullet bull;
 							bull.setDirection(Tanks[i].getDirection());
 							bull.setUserID(Tanks[i].getUserID());
 							//vector<Bullet> 
+							bull.setPosition(Tanks[i].getCentre());
+							Bullets.push_back(bull);
 
 							vector<Bullet> b = a.getBullets();
 							b.push_back(bull); 
@@ -181,8 +188,8 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 	}
 
 	for(int i=0;i<Bullets.size();i++)
-	{
-		cout<<"Stuck at bullet loop"<<endl;
+	{	
+	//	cout<<"Stuck at bullet loop"<<endl;
 		if(Bullets[i].getUserID()== PlayerID)
 		{
 			bool colwithwalls = Bullets[i].CollideWithWalls(Bricks);
@@ -205,6 +212,7 @@ Board Board::GiveChanges(vector< pair<string,string> > tankinstr, vector< pair<s
 				}
 				if(k==bulinstr.size())
 				{
+					cout<<"move bullet"<<endl;
 					Bullets[i].Move(Bullets[i].getDirection());
 					vector<Bullet> t = a.getBullets();
 					t.push_back(Bullets[i]); 

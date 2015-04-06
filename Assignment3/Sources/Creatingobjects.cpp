@@ -32,6 +32,7 @@ void createface(Face newface){
 	newvertex3.z = newface.vertex3.z;
 	 //glTexCoord2f(0.0f, 0.0f);	// Bottom Left Of The Texture and Quad
     glVertex3f( newvertex1.x, newvertex1.y, newvertex1.z);              // Top
+
 	 //glTexCoord2f(1.0f, 0.0f); 	// Bottom Right Of The Texture and Quad
     glVertex3f( newvertex2.x, newvertex2.y, newvertex2.z);              // Bottom Left
     //glTexCoord2f(1.0f, 1.0f); 	// Top Right Of The Texture and Quad
@@ -44,15 +45,17 @@ void createface(Face newface){
 //create object from faces
 
 //create bullet
-// void createbullet(std::vector<Face> fac1, Bullet bullet){
-// 	glPushMatrix();
-// 	glColor3f(0,0,1);
-// 	translatebullet(bullet.getPosition().x,bullet.getPosition().y);
-// 	for(int i=0;i<fac1.size();i++){
-// 		createface(fac1[i]);
-// 	}
-// 	glPopMatrix();
-// }
+ void createbullet(std::vector<Face> fac1, Bullet bullet){
+ 	glPushMatrix();
+ 	glColor3f(0,0,1);
+ 	translatebullet(bullet.getPosition().getX(), bullet.getPosition().getY());
+ 	cout<<fac1.size()<<" Face 1 size "<<endl;
+
+ 	for(int i=0;i<fac1.size();i++){
+ 		createface(fac1[i]);
+ 	}
+ 	glPopMatrix();
+ }
 
 // //create missile
 // void createmissile(std::vector<Face> fac1,Missile attr_missile){

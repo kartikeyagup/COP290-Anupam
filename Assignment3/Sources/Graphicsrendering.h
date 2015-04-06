@@ -46,6 +46,6 @@ void createscreen(int,char*);
 void Rotatetank(/*double,double,double*/);
 void Translatetank(double,double);
 
-void tranlatebullet(double,double);
+void translatebullet(double,double);
 void translatemissile(double,double);
 #endif

@@ -6,7 +6,7 @@
 
 
 void createface(Face);
-// void createbullet(std::vector<Face>,Bullet);
+ void createbullet(std::vector<Face>,Bullet);
 // void createmissile(std::vector<Face>,Missile);
 void createtank(std::vector<Face>,Tank);
 // void createwall(std::vector<Face>);

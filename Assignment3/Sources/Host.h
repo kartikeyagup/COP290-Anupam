@@ -3,7 +3,8 @@
 
 using namespace std;
 
-class Setup
+
+class Host
 {
 	private:
 		string Mode;
@@ -26,6 +27,6 @@ class Setup
 		vector<string> getConnectedIPs();
 		double getFPS();
 
-		void CreateBoard();		//Creates board with certain no. of players.	
+		//void CreateBoard();		//Creates board with certain no. of players.	
 };
 #endif

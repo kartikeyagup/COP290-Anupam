@@ -1,11 +1,7 @@
 #include <bits/stdc++.h>
 
-#include "Vector.h"
-#include "Walls.h"
-#include "Board.h"
-#include "Bullet.h"
-#include "PowerUps.h"
-#include "Tank.h"
+
+#include "Host.h"
 
 using namespace std;
 
@@ -14,52 +10,52 @@ Host::Host()
 
 }
 
-void setMode(string mode)
+void Host::setMode(string mode)
 {
 	Mode = mode;
 }
 
-void setPlayers(int players)
+void Host::setPlayers(int players)
 {
 	Players = players;
 }
 
-void setIP(string ip)
+void Host::setIP(string ip)
 {
 	IP = ip;
 }
 
-void setConnectedIPs(vector<string> connips)
+void Host::setConnectedIPs(vector<string> connips)
 {
 	ConnectedIPs = connips;
 }
 
-void setFPS(double fps)
+void Host::setFPS(double fps)
 {
 	FPS = fps;
 }
 
-string getMode()
+string Host::getMode()
 {
 	return Mode;
 }
 
-int getPlayers()
+int Host::getPlayers()
 {
 	return Players;
 }
 
-string getIP()
+string Host::getIP()
 {
 	return IP;
 }
 
-vector<string> getConnectedIPs()
+vector<string> Host::getConnectedIPs()
 {
 	return ConnectedIPs;
 }
 
-double getFPS()
+double Host::getFPS()
 {
 	return FPS;
 }

@@ -133,7 +133,7 @@ void Tank::Move(string dire)
 	{
 		CentrePosition = CentrePosition.AddVector(change);
 	}
-	else 
+	else if(dire !="")
 	{
 		Direction = dire;
 	}

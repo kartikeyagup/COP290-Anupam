@@ -1,7 +1,7 @@
 all : Game
 
-Game: Vector.o Tank.o PowerUps.o Bullet.o Walls.o Board.o TestTank.o  
-	g++ -o Game Vector.o Tank.o PowerUps.o Bullet.o Walls.o Board.o TestTank.o
+Game: Vector.o Tank.o PowerUps.o Bullet.o Walls.o Board.o TestTank.o Host.o Conversions.o
+	g++ -o Game Vector.o Tank.o PowerUps.o Bullet.o Walls.o Board.o TestTank.o Host.o Conversions.o
 
 Vector.o : Vector.cpp 
 	g++ -c Vector.cpp
@@ -23,3 +23,9 @@ PowerUps.o : PowerUps.cpp
 
 TestTank.o : TestTank.cpp
 	g++ -c TestTank.cpp
+
+Host.o : Host.cpp
+	g++ -c Host.cpp
+
+Conversions.o : Conversions.cpp
+		g++ -c Conversions.cpp

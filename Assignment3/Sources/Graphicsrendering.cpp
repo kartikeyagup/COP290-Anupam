@@ -204,6 +204,86 @@ void keySpecialUp(int key,int x,int y){
 
 // }
 
+
+std::vector<Face> fileread2(std::string path){
+    std::vector<Face> read;
+    std::vector<Vertex> vertexread;
+    std::vector<std::string> colourread;
+    FILE *file = fopen(path.c_str(), "r");
+    
+    std::cout << "Starting\n";
+    if( file == NULL ){
+        printf("Impossible to open the file !\n");
+        return read;
+    }
+    while( 1 ){
+        std::cout << "In while\n";
+        char lineHeader[128];
+        // read the first word of the line
+        int res = fscanf(file, "%s", &lineHeader);
+
+        if (res == EOF)
+            break; // EOF = End Of File. Quit the loop.
+        else{
+            std::cout << "In else\n";
+            while( 1 ){
+                std::cout << "In while again\n";
+                char lineHeader[128];
+                // read the first word of the line
+                int res = fscanf(file, "%s", &lineHeader);
+                if (res == EOF){
+                    std::cout << "EOF found\n";
+                    break; // EOF = End Of File. Quit the loop.
+                }
+                else{
+                    if ( strcmp( lineHeader, "v" ) == 0 ){
+                        std::cout << "vertex case\n";
+                        Vertex vertex;
+                        fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+                        vertexread.push_back(vertex);
+                    }
+                    else if ( strcmp( lineHeader, "vt" ) == 0 ){
+                        // Texture texture;
+                        // fscanf(file, "%f %f\n", &texture.x, &texture.y );
+                        // textureread.push_back(texture);
+                    }
+                    else if ( strcmp( lineHeader, "f" ) == 0 ){
+                        Face face;
+                        std::cout << "face case\n";
+                         int v1,v2,v3 ,x,y,z,a,b,c;
+                        int matches = fscanf(file, "%d//%d %d//%d %d//%d\n", &v1,&x,&v2,&y,&v3,&z );
+                        if (matches != 6){
+                            printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+                            return read;
+                        }
+                        face.vertex1 = vertexread[v1-1];
+                        face.vertex2 = vertexread[v2-1];
+                        face.vertex3 = vertexread[v3-1];
+                        // face.texture1 = textureread[x-1];
+                        // face.texture2 = textureread[y-1];
+                        // face.texture3 = textureread[z-1];
+                        //face.colour = colourread[colourread.size()-1];
+
+                        read.push_back(face);
+                        cout<<read.size()<<"Size of read\n";
+                        
+                    }
+                    else if( strcmp(lineHeader,"usemtl") == 0){
+                        std::cout<<"In usemtl\n";
+                        char Col[128];      //to store the colour name
+                        fscanf(file, "%s\n", &Col);
+                        std::cout<<Col<<"Printing colour\n";
+                        
+                        colourread.push_back(Col);
+
+                    }
+                }   
+            }
+            return read;
+        }
+    }
+}
+
 //file reading
 std::vector<Face> fileread(std::string path){
 	std::vector<Face> read;
@@ -263,7 +343,9 @@ std::vector<Face> fileread(std::string path){
     					// face.texture2 = textureread[y-1];
     					// face.texture3 = textureread[z-1];
     					face.colour = colourread[colourread.size()-1];
+
     					read.push_back(face);
+                        cout<<read.size()<<"Size of read\n";
     				}
     				else if( strcmp(lineHeader,"usemtl") == 0){
     					std::cout<<"In usemtl\n";
@@ -361,25 +443,14 @@ std::unordered_map<std::string,Colour> filereadmtl(std::string path){
 
 void specialKeysrotate( unsigned char key, int x, int y ) 								//using special keys to rotate the balls
 {	
-	if (key == 100){
-        rotate_y += 3;
-    }
-    else if (key == 97){
-        rotate_y += -3;
-    }
-    else if (key == 119){
-        rotate_x += 3;
-    }
-    else if (key == 115){
-        rotate_x += -3;
-    }
-    else if (key == 120){
-        rotate_z += 3;
-    }
-    else if (key == 122)
+
+    if(key==97)
     {
-    	rotate_z += -3;
+        keypressed += "Shoot";
+        //cout<<keypressed<<endl;
+        //exit(1);
     }
+
     glutPostRedisplay();
     // std::cout<<"Rotate Variables"<<"\n";
     // std::cout<<rotate_x<<"\n";
@@ -403,15 +474,11 @@ void specialKeystranslate( int key, int x, int y ) 								//using special keys 
     }   
     cout<<"key is pressed"<<endl;
     cout<<keypressed<<"  Key is pressed"<<endl;
-    tankins.resize(0);
-    pair<string,string> ins= make_pair(board.getPlayerID()+"1" , keypressed);
-    tankins.push_back(ins);
-    bulletins.resize(0);
+
     cout<<tankins[0].second<<" instruction sent"<<endl;
 	
     glutPostRedisplay();
  }
-
 
 static void resize(int width, int height){
     const float ar = (float) width / (float) height; 
@@ -480,6 +547,8 @@ void display(void){
 	// createwall(wall);
 	// createeagle(eagle);
     cout<<"Problem Just before change"<<endl;
+    pair<string,string> ins= make_pair(board.getPlayerID()+"1" , keypressed);
+    tankins.push_back(ins);
     Board change = board.GiveChanges(tankins,bulletins);
     cout<<"No problem after change"<<endl;
 
@@ -488,6 +557,21 @@ void display(void){
     {
 	   createtank(tank,tanks[i]);
     }
+
+    vector<Bullet> bullets = board.getBullets();
+    for(int i=0;i<bullets.size();i++)
+    {
+       createbullet(bullet,bullets[i]);
+    }
+
+    // Bullet a ;
+    // Vector Centre;
+    // Centre.setX(0);
+    // Centre.setY(0);
+    // Centre.setZ(-10000);
+    // a.setPosition(Centre);
+    // a.setDirection("up");
+    // createbullet(bullet);
 
    /* vector<Bullet> bullets = board.getBullets();
     for(int i=0;i<bullets.size();i++)
@@ -580,10 +664,10 @@ int main(int argc,char* argv[]){
  //    glutKeyboardUpFunc(keyUp);
     glDepthFunc(GL_LESS); 
    // LoadGLTextures();              // Load The Texture(s) 
-    bullet = fileread("../trial/bullet.obj");
-    missile = fileread("../trial/missile.obj");
-    wall = fileread("../trial/wall.obj");
-    eagle = fileread("../trial/monkey.obj");
+    bullet = fileread2("../trial/bullet.obj");
+    // missile = fileread("../trial/missile.obj");
+    // wall = fileread("../trial/wall.obj");
+    // eagle = fileread("../trial/monkey.obj");
     tank = fileread("../trial/tank.obj");
 
     tankcolour = filereadmtl("../trial/tank.mtl");

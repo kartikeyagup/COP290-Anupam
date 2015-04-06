@@ -12,7 +12,7 @@
 
 Bullet::Bullet()
 {
-	cout<<"Bullet created successfully"<<endl;
+	//cout<<"Bullet created successfully"<<endl;
 }
 
 
@@ -89,6 +89,7 @@ string Bullet::getDirection()
 
 void Bullet::Move(string dire)
 {
+
 	Vector change;
 	change.setX(0);
 	change.setY(0);
@@ -109,7 +110,7 @@ void Bullet::Move(string dire)
 
 	else if(dire== "right")
 	{
-		change.setZ(20);
+		change.setX(20);
 	}
 
 	if(Direction == dire)
@@ -126,7 +127,7 @@ bool Bullet::CollideWithTanks(vector<Tank>& tanks)
 {
 	for(int i=0;i<tanks.size();i++)
 	{
-		if((Position.SubVector(tanks[i].getCentre()).Mod()<100))
+		if((Position.SubVector(tanks[i].getCentre()).Mod()<100) && (UserID != tanks[i].getUserID()))
 		{
 			DeathStatus = true;
 			return true;
